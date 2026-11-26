@@ -1,0 +1,3077 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/index.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:26 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=461c0f28-a224-431b-95e2-008d78734c0b
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Demo Banking App</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Demo App">
+    <meta name="application-name" content="Demo App">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="assets/demo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;500;700&amp;family=Inter:wght@300;400;500;600&amp;family=Open+Sans:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <style>
+        body {
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+        /* Базовые сбросы отступов */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        html, body {
+            touch-action: manipulation;
+            -ms-touch-action: manipulation;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            height: 100%;
+            height: 100dvh;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
+        }
+
+        body {
+            background-color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100%;
+            min-height: 100dvh;
+            padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* ==========================================================================
+           1. СТИЛИ ФИКСИРОВАННОЙ ШАПКИ (ПОИСК И КОРЗИНА)
+           ========================================================================= */
+        .header-container {
+            display: flex;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 0px 16px 4px 16px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 99999;
+        }
+
+        .search-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            margin-right: 6px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            width: 22px;
+            height: 22px;
+            pointer-events: none;
+        }
+
+        .spark-icon {
+            position: absolute;
+            right: 12px;
+            width: 22.5px;
+            height: 22.5px;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 38px;
+            background-color: #f2f2f2;
+            border: none;
+            border-radius: 8px;
+            padding-left: 42px;
+            padding-right: 42px;
+            font-size: 16px;
+            font-weight: 430;
+            color: #000000;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #919191;
+            font-weight: 430;
+            font-size: 16px;
+        }
+
+        .cart-button {
+            background-color: #f2f2f2;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+        }
+
+        .cart-icon {
+            width: 25.5px;
+            height: 25.5px;
+            filter: grayscale(100%) brightness(0.9) opacity(0.5);
+        }
+
+        /* ==========================================================================
+           2. СТИЛИ БАННЕРА
+           ========================================================================== */
+        .banner-section {
+            padding: 8px 16px 0px 16px;
+            background-color: #ffffff;
+            padding-top: 50px;
+            position: relative;
+        }
+
+        .banner-carousel {
+            position: relative;
+            width: 100%;
+            height: 115px;
+            overflow: hidden;
+        }
+
+        .banner-item {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .banner-item.active {
+            opacity: 1;
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            border-radius: 16px;
+            object-fit: cover;
+        }
+
+        .banner-dots-container {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 3px 6px;
+            border-radius: 20px;
+        }
+
+        .banner-dots {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .banner-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            transition: background-color 0.3s;
+        }
+
+        .banner-dot.active {
+            background-color: #ffffff;
+        }
+
+        /* ==========================================================================
+           3. СТИЛИ СЕТКИ ИКОНОК
+           ========================================================================== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            row-gap: 16px;
+            column-gap: 8px;
+            padding: 12px 16px 12px 16px;
+            background-color: #ffffff;
+        }
+
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .service-item--clickable {
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .service-item--clickable:active .icon-box {
+            opacity: 0.7;
+        }
+
+        /* Экран загрузки «Магазин» */
+        .shop-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 100000;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .shop-loader:not(.hidden) {
+            animation: pinSlideUp 0.4s cubic-bezier(0.32, 0.94, 0.6, 1) forwards;
+            pointer-events: auto;
+        }
+        .shop-loader.hidden {
+            animation: pinSlideDown 0.3s ease forwards;
+            pointer-events: none;
+        }
+        @keyframes pinSlideUp {
+            from { transform: translateY(100%); opacity: 1; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pinSlideDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100%); opacity: 1; }
+        }
+
+        .shop-loader-close {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 36px;
+            height: 36px;
+            border: none;
+            border-radius: 50%;
+            background: #f0f0f0;
+            color: #888888;
+            font-size: 22px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .shop-loader-content {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .shop-loader-icon {
+            width: 78px;
+            height: 78px;
+            border-radius: 20px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .shop-loader-icon img {
+            width: 78px;
+            height: 78px;
+            display: block;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        /* Код доступа — Мой Банк */
+        .bank-pin-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2100;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .bank-pin-overlay:not(.hidden) { 
+            animation: pinSlideUp 0.4s cubic-bezier(0.32, 0.94, 0.6, 1) forwards;
+            pointer-events: auto;
+        }
+        .bank-pin-overlay.hidden { 
+            animation: pinSlideDown 0.3s ease forwards;
+            pointer-events: none;
+        }
+        .bank-pin-overlay.hidden.bank-pin-overlay--instant {
+            animation: none !important;
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        @keyframes pinSlideUp {
+            from { transform: translateY(100%); opacity: 1; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes pinSlideDown {
+            from { transform: translateY(0); opacity: 1; }
+            to { transform: translateY(100%); opacity: 1; }
+        }
+
+        .bank-pin-top {
+            display: flex;
+            align-items: flex-start;
+            padding: 6px 10px 0;
+            padding-top: calc(6px + env(safe-area-inset-top, 0px));
+            flex-shrink: 0;
+        }
+        .bank-pin-exit {
+            margin-top: -5px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            transition: opacity 0.2s ease;
+        }
+        .bank-pin-exit:active {
+            opacity: 0.5;
+        }
+        .bank-pin-exit-img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .bank-pin-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 4px 24px 6px;
+            gap: 20px;
+            overflow: visible;
+        }
+        .bank-pin-avatar {
+            width: 107px;
+            height: 107px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: visible;
+            margin-top: -10px;
+            z-index: 100;
+        }
+        .bank-pin-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+        .bank-pin-code-block {
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 120px;
+            justify-content: flex-start;
+        }
+        .bank-pin-title {
+            font-size: 15px;
+            font-weight: 400;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+            letter-spacing: -0.15px;
+        }
+        .bank-pin-dots {
+            display: flex;
+            gap: 22px;
+        }
+        .bank-pin-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e8e8e8;
+            transition: background 0.12s ease;
+        }
+        .bank-pin-dot.filled { background: #f14635; }
+        .bank-pin-dot.error { background: #f14635; opacity: 0.45; }
+
+        .bank-pin-keypad {
+            width: 100%;
+            max-width: 400px;
+            margin: 14px auto 0;
+            flex-shrink: 0;
+            padding: 0 28px 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            column-gap: 48px;
+            row-gap: 19px;
+        }
+        .bank-pin-key:not(.bank-pin-key--icon) {
+            position: relative;
+            height: 64px;
+            border: none;
+            background: none;
+            font-size: 27px;
+            font-family: "Inter", sans-serif;
+            font-weight: 400;
+            color: #1a1a1a;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            z-index: 0;
+        }
+        .bank-pin-key:not(.bank-pin-key--icon).is-pressed {
+            color: #ffffff;
+        }
+        .bank-pin-key:not(.bank-pin-key--icon).is-pressed::before {
+            content: "";
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: #f14635;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            transition: background 0.1s ease;
+        }
+        .bank-pin-key--icon {
+            height: 64px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bank-pin-key--icon:active { opacity: 0.4; }
+        .bank-pin-key--icon svg {
+            width: 36px;
+            height: 38px;
+            stroke: #1a1a1a;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .bank-pin-faceid-img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+        .bank-pin-key--backspace {
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .bank-pin-key--backspace.is-visible {
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .bank-pin-footer {
+            flex-shrink: 0;
+            text-align: center;
+            padding: 12px 16px;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+        }
+        .bank-pin-forgot {
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 430;
+            color: #4a90d9;
+            cursor: pointer;
+            padding: 8px 12px;
+            font-family: inherit;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .bank-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 2200;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .bank-loader.hidden { display: none; }
+        .bank-loader-spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #e8e8e8;
+            border-top-color: #f14635;
+            border-radius: 50%;
+            animation: shop-loader-spin 0.9s linear infinite;
+        }
+
+        /* Секретное меню для данных карты */
+        .secret-card-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2300;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .secret-card-overlay:not(.hidden) {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .secret-card-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .secret-card-top {
+            display: flex;
+            align-items: flex-start;
+            padding: 6px 10px 0;
+            padding-top: calc(6px + env(safe-area-inset-top, 0px));
+            flex-shrink: 0;
+        }
+        .secret-card-exit {
+            margin-top: -5px;
+            width: 44px;
+            height: 44px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            transition: opacity 0.2s ease;
+        }
+        .secret-card-exit:active {
+            opacity: 0.5;
+        }
+        .secret-card-exit-img {
+            width: 26px;
+            height: 26px;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            -webkit-user-drag: none;
+        }
+
+        .secret-card-body {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 20px 24px 6px;
+            gap: 16px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .secret-card-title {
+            font-size: 23px;
+            font-weight: 500;
+            color: #1a1a1a;
+            letter-spacing: -0.2px;
+            text-align: center;
+        }
+
+        .secret-card-form {
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .secret-card-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .secret-card-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666666;
+        }
+
+        .secret-card-input {
+            width: 100%;
+            height: 48px;
+            border: 1.5px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 0 16px;
+            font-size: 16px;
+            color: #1a1a1a;
+            outline: none;
+            background: #ffffff;
+            transition: border-color 0.2s ease;
+        }
+        .secret-card-input:focus {
+            border-color: #f14635;
+        }
+        .secret-card-input::placeholder {
+            color: #9e9e9e;
+        }
+
+        .secret-card-btn {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 14px;
+            background: #f14635;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 8px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .secret-card-btn:active {
+            opacity: 0.8;
+        }
+
+
+
+        .shop-loader-title {
+            font-size: 17px;
+            font-weight: 500;
+            color: #333333;
+            margin: 0;
+        }
+
+        .shop-loader-spinner {
+            width: 35px;
+            height: 35px;
+            border: 3px solid #cfd3d8;
+            border-right-color: transparent;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            animation: shop-loader-spin 0.9s linear infinite;
+            margin-top: 4px;
+        }
+
+        @keyframes shop-loader-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .icon-box {
+            width: 38.5px;
+            height: 38.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            transition: opacity 0.1s ease;
+        }
+
+        .service-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+        }
+
+        .magnum-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 7px;
+            background-color: #ffffff;
+        }
+
+        .service-title {
+            font-size: 16px;
+            line-height: 1.2;
+            font-weight: 450;
+            color: #000000;
+        }
+
+        .badge-0024 {
+            position: absolute;
+            top: -8px; 
+            right: 10px;
+            width: 37px;
+            height: 33px;
+            z-index: 2;
+        }
+
+        .badge-0024 img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Тонкая разделительная полоса */
+        .divider {
+            height: 1px;
+            background-color: #f2f2f2;
+            margin: 0; 
+            width: 100%;
+        }
+
+        /* ==========================================================================
+           4. СТИЛИ ДВУХСТРОЧНОЙ КАРУСЕЛИ ПРОДУКТОВ
+           ========================================================================== */
+        .products-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+            padding: 22px 16px 10px 16px;
+            -webkit-overflow-scrolling: touch;
+            background-color: #ffffff;
+        }
+
+        .products-scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .products-rows-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 18px; 
+            width: max-content; 
+        }
+
+        .products-row {
+            display: flex;
+            gap: 18px;               
+        }
+
+        .product-card {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: inherit;
+            width: 258px;           
+            flex-shrink: 0;
+        }
+
+        .product-badge {
+            width: 59px;
+            height: 46.5px;
+            border-radius: 8px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .img-kredit { background-image: url("../static.cdn-kaspi.kz/kkz/pcm/start/banners/Kredit.png"); }
+        .img-0012 { background-image: url("../mrk.cdn-kaspi.kz/msd/main_button/button_yellow/images_new/button/0012/0-0-12-card-600.svg"); }
+        .img-kn { background-image: url("../static.cdn-kaspi.kz/kkz/pcm/start/banners/KN.png"); }
+        .img-gold { background-image: url("../static.cdn-kaspi.kz/kkz/pcm/start/banners/Gold_salary.png"); }
+        .img-0024 { background-image: url("../mrk.cdn-kaspi.kz/msd/main_button/button_yellow/images_new/button/0024/i-0-0-24-card-600.svg"); }
+        .img-deposit { background-image: url("../static.cdn-kaspi.kz/msd/main_button/deposit_new.png"); }
+        .img-red { background-image: url("../static.cdn-kaspi.kz/mrk/Nurali/RED_PLUS_BUTTON/red-plus-main-opay-x3.png"); }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;       
+        }
+
+        .product-name {
+            font-size: 19px;
+            color: #000000;
+            font-weight: 430;
+            white-space: nowrap;
+            letter-spacing: 0px;
+        }
+
+        .product-desc {
+            font-size: 13.5px;
+            color: #a2a2a2;
+            font-weight: 430;
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        /* ==========================================================================
+           5. СТИЛИ ДЛЯ 'ВЫ НЕДАВНО СМОТРЕЛИ'
+           ========================================================================== */
+        .recently-viewed-section {
+            padding: 12px 0 12px 16px;
+            background-color: #ffffff;
+        }
+
+        .recently-viewed-title {
+            font-size: 18px;
+            font-weight: 750;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            letter-spacing: -0.2px;
+        }
+
+        .recently-viewed-scroll {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-snap-type: x mandatory;
+            padding-right: 16px;
+        }
+
+        .recently-viewed-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .recently-viewed-card {
+            flex: 0 0 120px;
+            scroll-snap-align: start;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .recently-viewed-img-frame {
+            width: 115px;
+            height: 115px;
+            border: 0.5px solid #e8e8e8;
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .recently-viewed-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .recently-viewed-title-text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #1a1a1a;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .recently-viewed-rating {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 14px;
+            color: #8f8f8f;
+            margin-top: -2px;
+        }
+
+        .recently-viewed-rating-val {
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .recently-viewed-star {
+            width: 13px;
+            height: 13px;
+            fill: #f14635;
+            flex-shrink: 0;
+        }
+
+        .recently-viewed-price {
+            font-family: 'Roboto', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: #000000;
+            margin-top: -5px;
+            margin-bottom: 5px;
+        }
+
+        /* ==========================================================================
+           6. СТИЛИ ДЛЯ ТАБОВ
+           ========================================================================== */
+        .tabs-container {
+            width: 100%;
+            padding: 20px 12px 10px;
+            display: flex;
+            gap: 6px;
+            background-color: #ffffff;
+        }
+
+        .tabs-container + .goods-grid {
+            padding-top: 4px;
+        }
+
+        .tab-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 36px;
+            flex: 1;
+            border-radius: 18px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.1s ease;
+            line-height: 1;
+            padding-bottom: 2px;
+            box-shadow: none;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .tab-btn.active {
+            background-color: #f14635;
+            color: #ffffff;
+            border: 2px solid #f14635;
+        }
+
+        .tab-btn.outline {
+            background-color: transparent;
+            color: #f14635;          
+            border: 2px solid #f14635;
+        }
+
+        .tab-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-bottom: -2px; 
+        }
+
+        /* ==========================================================================
+           6. СТИЛИ ДЛЯ СЕТКИ ТОВАРОВ (как в оригинале Kaspi)
+           ========================================================================== */
+        .goods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            padding: 12px 1px 30px 1px;
+            background-color: #ffffff;
+        }
+
+        .goods-card {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            height: 100%;
+            border: none;
+            box-shadow: none;
+        }
+
+        .goods-media {
+            position: relative;
+            padding: 0 0 0 0;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 5px;
+            right: 2px;
+            background: none;
+            border: none;
+            z-index: 10;
+            padding: 4px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .wishlist-icon {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff !important;         /* Внутренность сердечка — БЕЛАЯ */
+        stroke: #000000 !important;       /* Первая обводка — ЧЕРНАЯ */
+        stroke-width: 2.8px !important;   /* Сделали контур жирным и отчетливым */
+        stroke-linejoin: round !important;
+        overflow: visible !important;     /* Чтобы внешняя обводка не обрезалась */
+
+        /* Создаем вторую БЕЛУЮ обводку вокруг черной с помощью жестких теней */
+        filter: drop-shadow(1.5px 0px 0px #ffffff) 
+                drop-shadow(-1.5px 0px 0px #ffffff) 
+                drop-shadow(0px 1.5px 0px #ffffff) 
+                drop-shadow(0px -1.5px 0px #ffffff);
+}
+
+        .goods-img-frame {
+            position: relative;
+            width: 100%;
+            height: 215px;
+            background-color: #ffffff;
+            border: 0.7px solid #e8e8e8;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0 !important;
+            box-sizing: border-box;
+        }
+
+        .goods-img {
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: cover !important;
+        }
+
+        .goods-badges-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            z-index: 5;
+        }
+
+        .pcs-ad-grid__item-bonus {
+            display: none;
+        }
+
+        .pcs-ad-grid__item-badge {
+            display: none;
+        }
+
+        .goods-badges-container > .pcs-ad-grid__item-badge:only-child {
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 0;
+        }
+
+        .pcs-shop__badge-loan-display {
+            color: #000000;
+            font-size: 12px;
+            font-weight: 648;
+            padding: 4px 10px 4px 8px;
+            display: block;
+            letter-spacing: -0.1px;
+            line-height: 1.2;
+        }
+
+        .goods-carousel-dots {
+            display: none;
+        }
+
+        .goods-carousel-dots .dot {
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background-color: #d4d4d4;
+            flex-shrink: 0;
+        }
+
+        .goods-carousel-dots .dot.active {
+            background-color: #2a2a2a;
+        }
+
+        .goods-info-block {
+            padding: 10px 2px 14px 8px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .goods-price-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .goods-ad-label {
+            font-size: 13px;
+            color: #a3a3a3;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+
+        .goods-price {
+            font-family: 'Roboto', sans-serif;
+            font-size: 19px;
+            font-weight: 950;
+            color: #000000;
+            line-height: 1.15;
+            letter-spacing: -0.3px;
+        }
+
+
+        .goods-bonus-subtext {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e5f7d0;
+            color: #1f1f1f;
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+            padding: 2px 10px;
+            max-width: 93%;
+            border-radius: 9px;
+            white-space: nowrap;
+        }
+
+        .goods-bonus-price {
+            display: none;
+        }
+
+        .goods-bonus-subtext {
+            display: none;
+        }
+
+        .goods-title {
+            font-size: 14px;
+            font-weight: 400;
+            color: #1a1a1a;
+            line-height: 1.3;
+            margin-top: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .goods-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            margin-top: 1px;
+        }
+
+        .star-icon {
+            width: 13px;
+            height: 13px;
+            fill: #f14635;
+            flex-shrink: 0;
+        }
+
+        .rating-val {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            color: #1a1a1a;
+        }
+
+        .reviews-count {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8f8f8f;
+        }
+
+        .goods-instalment-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .goods-instalment-badge {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffd300;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 14px;
+            font-weight: 520;
+            color: #000000;
+            line-height: 1.2;
+            margin-top: 4px;
+        }
+
+        .goods-instalment-term {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8f8f8f;
+            margin-left: -3px;
+        }
+
+        /* ==========================================================================
+           7. СТИЛИ НИЖНЕГО МЕНЮ (TAB BAR) — как в Kaspi
+           ========================================================================== */
+        .bottom-scroll-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px 0 calc(54px + env(safe-area-inset-bottom, 0px));
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .bottom-scroll-indicator__spinner {
+            width: 28px;
+            height: 28px;
+            margin-bottom: 70px;
+            border: 3px solid #e8e8e8;
+            border-top-color: #f14635;
+            border-radius: 50%;
+            animation: shop-loader-spin 0.9s linear infinite;
+        }
+
+        .bottom-nav {
+            position: fixed !important;
+            bottom: -5px !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100%;
+            min-height: 30px;
+            padding: 3px 0 calc(3px + env(safe-area-inset-bottom, 0px));
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            z-index: 99999;
+            box-shadow: none;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            top: auto !important;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 40px;
+            text-decoration: none;
+            color: #868686;
+            font-size: 11px;
+            font-weight: 400;
+            gap: 3px;
+            line-height: 1.1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-item.active {
+            color: #f14635;
+            font-weight: 500;
+            background-color: rgba(241, 70, 53, 0.1);
+            border-radius: 6px;
+        }
+
+        .nav-item--inert {
+            pointer-events: none;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        .nav-item.active .nav-icon {
+            stroke-width: 2.15;
+        }
+
+        .nav-icon {
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.55;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-icon--home {
+            width: 26px;
+            height: 26px;
+        }
+
+        .nav-icon .nav-fill {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .nav-mask-icon {
+            width: 25px;
+            height: 25px;
+            display: block;
+            background-color: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        .nav-mask-icon--qr {
+            width: 25px;
+            height: 25px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+        }
+
+        .nav-mask-icon--chat {
+            width: 24px;
+            height: 24px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+        }
+
+        .nav-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -5px;
+            right: -6px;
+            min-width: 19px;
+            height: 14px;
+            padding: 0 2px;
+            background-color: #f14635;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11.2px;
+            font-weight: 500;
+            line-height: 14px;
+            text-align: center;
+            border-radius: 999px;
+            letter-spacing: -0.5px;
+            box-sizing: border-box;
+            pointer-events: none;
+            box-shadow:
+                0 0 0 0.2px #b8b7b7,
+                0 0 0 0.9px #ffffff,
+                0 0 0 1.1px #cac9c9;
+        }
+
+        body.hide-bottom-nav .bottom-nav {
+            display: none !important;
+        }
+
+        body.hide-bottom-nav .header-container {
+            display: none !important;
+        }
+
+        .wishlist-btn svg path {
+        fill: #ffffff !important;         /* Внутренность сердечка — БЕЛАЯ */
+        stroke: #000000 !important;       /* Первая обводка — ЧЕРНАЯ */
+        stroke-width: 2.5px !important;   /* Толщина черной линии */
+        stroke-linejoin: round !important;
+        }
+
+        /* Делаем вторую БЕЛУЮ обводку вокруг черной */
+        .wishlist-btn svg {
+        overflow: visible !important;     /* Чтобы вторая обводка не обрезалась по краям иконки */
+    
+        /* Магия: делаем жесткую тень в 1.5 пикселя белого цвета во все стороны. 
+        Она ляжет строго поверх черной линии и создаст эффект второй обводки */
+        filter: drop-shadow(1.5px 0px 0px #ffffff) 
+            drop-shadow(-1.5px 0px 0px #ffffff) 
+            drop-shadow(0px 1.5px 0px #ffffff) 
+            drop-shadow(0px -1.5px 0px #ffffff);
+        }
+        #bank-pin-dots { gap: 20px !important; }
+
+        /* 2. Уменьшение жирности крестика */
+        .bank-pin-pad svg path, .bank-pin-pad svg line, .bank-pin-key svg path, .bank-pin-key svg line, [onClick*="bankPinBackspace"] svg line, [onClick*="bankPinBackspace"] svg path {
+        stroke-width: 1.3px !important;
+        }
+
+        /* Точный Скелетон под интерфейс Kaspi */
+    #skeleton-screen {
+        position: fixed; top: 0; left: 0; right: 0; bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+        background: #ffffff; z-index: 99998;
+        padding: 0; box-sizing: border-box;
+        display: flex; flex-direction: column; overflow: hidden;
+    }
+
+    .sk-anim {
+        background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+        background-size: 200% 100%;
+        animation: sk-shimmer 1s infinite linear;
+    }
+
+    @keyframes sk-shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .sk-search-row {
+        display: flex;
+        gap: 12px;
+        padding: 3px 16px;
+        margin-top: 0;
+    }
+    .sk-search-bar { flex: 1; height: 38px; border-radius: 10px; }
+    .sk-cart-icon { width: 38px; height: 38px; border-radius: 10px; }
+
+    .sk-banner-row {
+        padding: 32px 16px 16px;
+        margin-top: 35px;
+    }
+    .sk-banner { width: 100%; height: 115px; border-radius: 16px; }
+
+        .sk-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px 8px;
+            margin-bottom: 20px;
+            padding: 0 16px;
+        }
+
+    .sk-menu-item { display: flex; flex-direction: column; align-items: center; }
+    .sk-menu-icon { width: 38px; height: 38px; border-radius: 12px; }
+    .sk-menu-text { width: 50px; height: 9px; margin-top: 8px; border-radius: 4px; }
+
+    .sk-products-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 0 16px;
+        margin-bottom: 12px;
+    }
+    .sk-product-img { width: 100%; height: 53px; border-radius: 12px; }
+
+    .sk-recently-viewed {
+        padding: 12px 0 12px 16px;
+    }
+    .sk-recently-title { width: 180px; height: 17px; margin-bottom: 16px; border-radius: 4px; }
+    .sk-recently-scroll {
+        display: flex;
+        gap: 6px;
+    }
+    .sk-recently-item { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+    .sk-recently-card { width: 115px; height: 115px; border-radius: 12px; }
+    .sk-recently-name { width: 90px; height: 9px; margin-top: 6px; border-radius: 4px; }
+    .sk-recently-price { width: 70px; height: 11px; margin-top: 4px; border-radius: 4px; }
+
+        .sk-tabs-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 4px;
+            margin-top: 15px;
+            padding: 5px 12px 10px;
+        }
+
+        .sk-tab {
+            flex: 1;
+            height: 36px;
+            border-radius: 18px;
+        }
+
+        .sk-prod-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 0 16px;
+        }
+
+    .sk-prod-card { height: 200px; border-radius: 12px; }
+
+        .skeleton-fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+        /* Клавиатура пин-кода */
+        .bank-pin-key:not(.bank-pin-key--icon) {
+            font-family: "Heebo", -apple-system, BlinkMacSystemFont, sans-serif !important;
+            font-size: 28px !important;
+            font-weight: 400 !important;
+}
+    </style>
+</head>
+<body>
+    <!-- Скелетон загрузки -->
+<div id="skeleton-screen">
+    <!-- Баннер -->
+    <div class="sk-banner-row">
+        <div class="sk-anim sk-banner"></div>
+    </div>
+
+    <!-- 2 строки иконок и их названия -->
+    <div class="sk-menu-grid">
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+        <div class="sk-menu-item"><div class="sk-anim sk-menu-icon"></div><div class="sk-anim sk-menu-text"></div></div>
+    </div>
+
+    <!-- 2 строки карусели товаров (сетка 2x2) -->
+    <div class="sk-products-grid">
+        <div class="sk-anim sk-product-img"></div>
+        <div class="sk-anim sk-product-img"></div>
+        <div class="sk-anim sk-product-img"></div>
+        <div class="sk-anim sk-product-img"></div>
+    </div>
+
+    <!-- Надпись вы недавно смотрели -->
+    <div class="sk-recently-viewed">
+        <div class="sk-anim sk-recently-title"></div>
+    </div>
+
+    <!-- Сами скелетоны товаров (квадраты) и их скелетоны названия и цены -->
+    <div class="sk-recently-scroll">
+        <div class="sk-recently-item"><div class="sk-anim sk-recently-card"></div><div class="sk-anim sk-recently-name"></div><div class="sk-anim sk-recently-price"></div></div>
+        <div class="sk-recently-item"><div class="sk-anim sk-recently-card"></div><div class="sk-anim sk-recently-name"></div><div class="sk-anim sk-recently-price"></div></div>
+        <div class="sk-recently-item"><div class="sk-anim sk-recently-card"></div><div class="sk-anim sk-recently-name"></div><div class="sk-anim sk-recently-price"></div></div>
+        <div class="sk-recently-item"><div class="sk-anim sk-recently-card"></div><div class="sk-anim sk-recently-name"></div><div class="sk-anim sk-recently-price"></div></div>
+    </div>
+
+    <!-- Скелетон 3 овала -->
+    <div class="sk-tabs-row">
+        <div class="sk-anim sk-tab"></div>
+        <div class="sk-anim sk-tab"></div>
+        <div class="sk-anim sk-tab"></div>
+    </div>
+</div>
+    <header class="header-container">
+        <div class="search-wrapper">
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c6c6c6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"/></svg>
+            <input type="text" class="search-input" placeholder="Поиск по Kaspi.kz">
+            <svg class="spark-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="#7b7b7b" d="M20 2a1 1 0 0 1 .946.677l.13.378a3 3 0 0 0 1.869 1.87l.378.129a1 1 0 0 1 0 1.892l-.378.13a3 3 0 0 0-1.87 1.869l-.129.378a1 1 0 0 1-1.892 0l-.13-.378a3 3 0 0 0-1.869-1.87l-.378-.129a1 1 0 0 1 0-1.892l.378-.13a3 3 0 0 0 1.87-1.869l.129-.378A1 1 0 0 1 20 2m0 3.196a5 5 0 0 1-.804.804q.448.355.804.804q.355-.448.804-.804A5 5 0 0 1 20 5.196M8 3.586A2 2 0 0 1 9.414 3H14a1 1 0 1 1 0 2H9.414L8 6.414A2 2 0 0 1 6.586 7H4v12h16v-6a1 1 0 1 1 2 0v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2.586zM9 12.5a3 3 0 1 1 6 0a3 3 0 0 1-6 0m3-5a5 5 0 1 0 0 10a5 5 0 0 0 0-10"/></g></svg>
+        </div>
+
+        <button class="cart-button">
+            <img class="cart-icon" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_cart.CHT43S23.svg" alt="Корзина">
+        </button>
+    </header>
+
+    <section class="banner-section">
+        <div class="banner-carousel" id="bannerCarousel">
+            <div class="banner-item active">
+                <img class="banner-img" src="assets/banner1.png" alt="Баннер 1">
+            </div>
+            <div class="banner-item">
+                <img class="banner-img" src="assets/banner2.png" alt="Баннер 2">
+            </div>
+            <div class="banner-dots-container">
+                <div class="banner-dots">
+                    <div class="banner-dot active"></div>
+                    <div class="banner-dot"></div>
+                    <div class="banner-dot"></div>
+                    <div class="banner-dot"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="services-grid">
+        <div class="service-item service-item--clickable" role="button" tabindex="0" onclick="openShopLoader()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openShopLoader();}">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_cart.CHT43S23.svg" alt="Магазин">
+            </div>
+            <span class="service-title">Магазин</span>
+        </div>
+
+        <div class="service-item service-item--clickable" role="button" tabindex="0" onclick="openBankPin()" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openBankPin();}">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_my_bank.fcBV9L8E.svg" alt="Мой Банк">
+            </div>
+            <span class="service-title">Мой Банк</span>
+        </div>
+
+        <div class="service-item">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_payments.gPWDiHy1.svg" alt="Платежи">
+            </div>
+            <span class="service-title">Платежи</span>
+        </div>
+
+        <div class="service-item">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_transfers.DFzO-h0g.svg" alt="Переводы">
+            </div>
+            <span class="service-title">Переводы</span>
+        </div>
+
+        <div class="service-item">
+            <div class="icon-box">
+                <img class="magnum-img" src="assets/magnum.PNG" alt="Magnum">
+            </div>
+            <span class="service-title">Magnum</span>
+        </div>
+
+        <div class="service-item">
+            <div class="badge-0024"><img src="../mrk.cdn-kaspi.kz/msd/Alen/2026/June/BADGES/MAIN/0024_YELLOW.png" alt="0-0-24"></div>
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_travel.Hjva7Jlk.svg" alt="Travel">
+            </div>
+            <span class="service-title">Travel</span>
+        </div>
+
+        <div class="service-item service-item--clickable" 
+            role="button" 
+            tabindex="0" 
+            onclick="openGovWithPin()" 
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openGovWithPin();}">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_gov.BgaGDL3H.svg" alt="Госуслуги">
+            </div>
+            <span class="service-title">Госуслуги</span>
+        </div>
+
+        <div class="service-item service-item--clickable" id="work-icon" onclick="handleWorkClick()">
+            <div class="icon-box">
+                <img class="service-img" src="../static.cdn-kaspi.kz/kkz/mainfrontend/_astro/_jumys.DAPHHFkZ.svg" alt="Работа">
+            </div>
+            <span class="service-title">Работа</span>
+        </div>
+    </main>
+
+    <div class="divider"></div>
+
+    <div class="products-scroll-container">
+        <div class="products-rows-wrapper">
+            <div class="products-row">
+                <div class="product-card">
+                    <div class="product-badge img-0024"></div>
+                    <div class="product-info">
+                        <span class="product-name">Рассрочка 0-0-24</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge img-0012"></div>
+                    <div class="product-info">
+                        <span class="product-name">Рассрочка 0-0-12</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge img-kredit"></div>
+                    <div class="product-info">
+                        <span class="product-name">Кредит на Покупки</span>
+                        <span class="product-desc">Кредит или Рассрочка 0%</span>
+                    </div>
+                </div>
+                <div class="product-card" id="kaspi-gold-secret-trigger" onclick="handleSecretMenuClick()">
+                    <div class="product-badge img-gold"></div>
+                    <div class="product-info">
+                        <span class="product-name">Kaspi Gold</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="products-row">
+                <div class="product-card">
+                    <div class="product-badge img-red"></div>
+                    <div class="product-info">
+                        <span class="product-name">Kaspi Red+</span>
+                        <span class="product-desc">Рассрочка до 500 000 ₸</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge img-kn"></div>
+                    <div class="product-info">
+                        <span class="product-name">Кредит Наличными</span>
+                        <span class="product-desc">до 2,2 млн ₸ на Kaspi Gold</span>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge img-deposit"></div>
+                    <div class="product-info">
+                        <span class="product-name">Kaspi Депозит 15%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="recently-viewed-section">
+        <h2 class="recently-viewed-title">Вы недавно смотрели</h2>
+        <div class="recently-viewed-scroll">
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p73/pa9/159807730c657.jpg?format=gallery-medium" alt="MacBook Air">
+                </div>
+                <div class="recently-viewed-price">599 493 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple MacBook Air 13 2025</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(194)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h51/he1/84577897021470c657.jpg?format=gallery-medium" alt="MacBook Pro">
+                </div>
+                <div class="recently-viewed-price">1 820 330 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple MacBook Pro 16 2023</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(62)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p89/pba/64468961c657.jpg?format=gallery-medium" alt="Apple Watch">
+                </div>
+                <div class="recently-viewed-price">192 210 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple Watch Series 11</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(166)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p20/p63/37756153c657.jpg?format=gallery-medium" alt="PlayStation 5">
+                </div>
+                <div class="recently-viewed-price">478 999 ₸</div>
+                <h3 class="recently-viewed-title-text">Sony PlayStation 5</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(180)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p71/p03/120225795c657.jpg?format=gallery-medium" alt="RTX 5080">
+                </div>
+                <div class="recently-viewed-price">874 990 ₸</div>
+                <h3 class="recently-viewed-title-text">GIGABYTE GeForce RTX 5080</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">4.9</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(21)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h0e/h87/84212515864606c657.jpg?format=gallery-medium" alt="Logitech G Pro">
+                </div>
+                <div class="recently-viewed-price">58 990 ₸</div>
+                <h3 class="recently-viewed-title-text">Logitech G Pro X Superlight 2</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">4.8</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(371)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p85/p81/64167660c657.jpg?format=gallery-medium" alt="iPhone 17 Pro">
+                </div>
+                <div class="recently-viewed-price">780 000 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple iPhone 17 Pro 256Gb</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(1714)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h66/hbb/65007156396062c657.jpg?format=gallery-medium" alt="Ugreen USB">
+                </div>
+                <div class="recently-viewed-price">1 037 ₸</div>
+                <h3 class="recently-viewed-title-text">Ugreen USB Type-C - USB 3.0 A 0.1 м 50283</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(234)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p10/p8d/69283900c657.jpg?format=gallery-medium" alt="ZOWIE XL2586X+">
+                </div>
+                <div class="recently-viewed-price">640 990 ₸</div>
+                <h3 class="recently-viewed-title-text">ZOWIE XL2586X+ Fast TN 600Hz</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(8)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/pdb/p3f/126786145c657.jpg?format=gallery-medium" alt="ORZAX Ocean ExtraMag">
+                </div>
+                <div class="recently-viewed-price">6 190 ₸</div>
+                <h3 class="recently-viewed-title-text">ORZAX Ocean ExtraMag Магний</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(591)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p50/pcd/44161310c657.jpg?format=gallery-medium" alt="Тетрадь BG Minimal">
+                </div>
+                <div class="recently-viewed-price">1 860 ₸</div>
+                <h3 class="recently-viewed-title-text">Тетрадь BG Minimal, 96 л, А4</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(5)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h05/hdb/84777048178718c657.jpg?format=gallery-medium" alt="Общая тетрадь STAFF">
+                </div>
+                <div class="recently-viewed-price">300 ₸</div>
+                <h3 class="recently-viewed-title-text">Общая тетрадь STAFF Бумвинил, 96 л, А5</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(58)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/p28/p04/76282165c657.jpg?format=gallery-medium" alt="Apple iPad Pro 11">
+                </div>
+                <div class="recently-viewed-price">629 899 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple iPad Pro 11 2025 Wi-Fi 11</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(55)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h12/h90/86041614417950c657.jpg?format=gallery-medium" alt="Xiaomi Mi Jumbo Gel Pen">
+                </div>
+                <div class="recently-viewed-price">2 409 ₸</div>
+                <h3 class="recently-viewed-title-text">Xiaomi Mi Jumbo Gel Pen 10</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(68)</span>
+                </div>
+            </a>
+            <a class="recently-viewed-card">
+                <div class="recently-viewed-img-frame">
+                    <img class="recently-viewed-img" src="../resources.cdn-kaspi.kz/img/m/p/h41/h98/87295491702814c657.jpg?format=gallery-medium" alt="Apple iPhone 16 Pro Max">
+                </div>
+                <div class="recently-viewed-price">713 469 ₸</div>
+                <h3 class="recently-viewed-title-text">Apple iPhone 16 Pro Max</h3>
+                <div class="recently-viewed-rating">
+                    <span class="recently-viewed-rating-val">5.0</span>
+                    <svg class="recently-viewed-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span>(1855)</span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <div class="tabs-container">
+        <div class="tab-btn active">Рекомендации</div>
+        <div class="tab-btn outline">
+            <svg class="tab-icon" width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.2129 7.29745C0.848303 7.69485 0.848303 8.30512 1.2129 8.70252L2.15682 9.73135C2.3605 9.95336 2.45781 10.2528 2.42352 10.5522L2.26461 11.9393C2.20322 12.4751 2.56193 12.9689 3.09049 13.0761L4.45886 13.3536C4.75414 13.4135 5.00889 13.5986 5.15709 13.8609L5.84388 15.0765C6.10916 15.5461 6.68957 15.7347 7.18018 15.5107L8.45035 14.9309C8.72443 14.8058 9.03932 14.8058 9.3134 14.9309L10.5836 15.5107C11.0742 15.7347 11.6546 15.5461 11.9199 15.0765L12.6067 13.8609C12.7549 13.5986 13.0096 13.4135 13.3049 13.3536L14.6733 13.0761C15.2018 12.9689 15.5605 12.4751 15.4991 11.9393L15.3402 10.5522C15.3059 10.2528 15.4032 9.95336 15.6069 9.73135L16.5508 8.70252C16.9154 8.30512 16.9154 7.69485 16.5508 7.29745L15.6069 6.26861C15.4032 6.04661 15.3059 5.74713 15.3402 5.4478L15.4991 4.06064C15.5605 3.52483 15.2018 3.03111 14.6733 2.92391L13.3049 2.64639C13.0096 2.5865 12.7549 2.40142 12.6067 2.1391L11.9199 0.923456C11.6546 0.453897 11.0742 0.265312 10.5836 0.489264L9.3134 1.06905C9.03932 1.19416 8.72443 1.19416 8.45035 1.06905L7.18018 0.489264C6.68957 0.265312 6.10916 0.453896 5.84388 0.923455L5.15709 2.1391C5.00889 2.40142 4.75414 2.5865 4.45886 2.64639L3.09049 2.92391C2.56193 3.03111 2.20322 3.52483 2.26461 4.06064L2.42352 5.4478C2.45781 5.74713 2.3605 6.04661 2.15682 6.26861L1.2129 7.29745ZM6.65947 7.27176C7.42493 7.27176 8.04547 6.65122 8.04547 5.88576C8.04547 5.12029 7.42493 4.49976 6.65947 4.49976C5.894 4.49976 5.27347 5.12029 5.27347 5.88576C5.27347 6.65122 5.894 7.27176 6.65947 7.27176ZM11.5937 5.80742C11.8624 5.46232 11.8005 4.96468 11.4554 4.69593C11.1103 4.42718 10.6127 4.48907 10.3439 4.83418L6.17158 10.1918C5.90282 10.537 5.96472 11.0346 6.30983 11.3033C6.65493 11.5721 7.15256 11.5102 7.42132 11.1651L11.5937 5.80742ZM12.4908 10.1143C12.4908 10.8797 11.8702 11.5003 11.1048 11.5003C10.3393 11.5003 9.71878 10.8797 9.71878 10.1143C9.71878 9.3488 10.3393 8.72827 11.1048 8.72827C11.8702 8.72827 12.4908 9.3488 12.4908 10.1143Z" fill="#F14635"></path>
+            </svg>
+            Скидки
+        </div>
+        <div class="tab-btn outline">
+            <svg class="tab-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.52194 15.1927C3.09834 14.3598 1.88281 12.8538 1.88281 10.2818C1.88281 9.78709 2.16521 8.83212 2.46403 7.82159C2.55568 7.51168 2.64887 7.19654 2.73593 6.88784C3.00937 5.91837 3.16249 4.99629 3.16249 3.97871C3.88281 4.6001 5.11998 5.91837 5.2953 7.85779C5.70395 7.48619 6.45019 6.71988 6.72586 4.75223C6.7352 4.68559 6.74429 4.62042 6.75318 4.55665C7.00681 2.73727 7.10272 2.0493 8.38281 0.600098C8.59012 2.46584 8.97469 3.44869 9.32349 4.34013C9.81598 5.59878 10.2372 6.67522 9.98746 9.79721C10.0249 9.76886 10.0688 9.73803 10.1182 9.70341C10.6319 9.34319 11.7311 8.57238 12.1203 5.91837C12.9834 6.88784 14.733 9.67576 13.3999 12.7061C12.8324 13.9963 11.9678 14.7974 11.08 15.2942C11.1026 15.2366 11.124 15.1776 11.1444 15.1173C11.6734 13.5516 10.3801 11.3997 9.83878 11.117C9.70526 12.7187 8.2661 13.1984 8.2661 13.1984C6.84265 12.2416 6.82695 10.7998 7.30666 8.40119C7.20967 8.49257 7.10447 8.59938 6.99411 8.71702C5.49617 10.3138 4.20263 12.3447 4.39412 14.5257C4.41349 14.7464 4.45581 14.9712 4.52194 15.1927Z" fill="#FB541F"></path>
+                <path d="M4.52194 15.1927L4.26945 15.6243C4.44668 15.7279 4.66928 15.7127 4.83077 15.5859C4.99225 15.4591 5.05978 15.2464 5.00105 15.0497L4.52194 15.1927ZM2.46403 7.82159L2.94351 7.96338L2.46403 7.82159ZM2.73593 6.88784L2.25471 6.75211H2.25471L2.73593 6.88784ZM3.16249 3.97871L3.48909 3.60011C3.34102 3.47238 3.13208 3.44269 2.95429 3.52412C2.7765 3.60555 2.66249 3.78315 2.66249 3.97871H3.16249ZM5.2953 7.85779L4.79733 7.9028C4.81441 8.0918 4.93702 8.25484 5.11386 8.32371C5.2907 8.39257 5.49128 8.35539 5.63168 8.22771L5.2953 7.85779ZM6.72586 4.75223L6.2307 4.68285V4.68285L6.72586 4.75223ZM6.75318 4.55665L6.25797 4.48761L6.25797 4.48761L6.75318 4.55665ZM8.38281 0.600098L8.87975 0.544882C8.85791 0.348291 8.72223 0.183057 8.53364 0.123389C8.34506 0.0637215 8.13902 0.120837 8.00807 0.269085L8.38281 0.600098ZM9.32349 4.34013L9.78912 4.15794L9.78912 4.15794L9.32349 4.34013ZM9.98746 9.79721L9.48906 9.75735C9.47335 9.95376 9.57446 10.1411 9.74728 10.2357C9.9201 10.3304 10.1324 10.3147 10.2894 10.1957L9.98746 9.79721ZM10.1182 9.70341L10.4053 10.1128L10.4053 10.1128L10.1182 9.70341ZM12.1203 5.91837L12.4937 5.58588C12.3645 5.44078 12.163 5.38365 11.9768 5.43938C11.7907 5.4951 11.6537 5.6536 11.6256 5.84583L12.1203 5.91837ZM13.3999 12.7061L13.8576 12.9074L13.3999 12.7061ZM11.08 15.2942L10.6144 15.1122C10.5375 15.3088 10.5924 15.5325 10.7516 15.6712C10.9108 15.8099 11.14 15.8337 11.3242 15.7305L11.08 15.2942ZM11.1444 15.1173L10.6707 14.9572V14.9572L11.1444 15.1173ZM9.83878 11.117L10.0702 10.6738C9.9218 10.5963 9.74439 10.5982 9.59768 10.679C9.45096 10.7597 9.35442 10.9086 9.34051 11.0755L9.83878 11.117ZM8.2661 13.1984L7.98718 13.6134C8.11579 13.6998 8.27721 13.7217 8.42422 13.6727L8.2661 13.1984ZM7.30666 8.40119L7.79695 8.49925C7.83963 8.28589 7.73942 8.06943 7.54913 7.96391C7.35885 7.8584 7.12217 7.88806 6.9638 8.03726L7.30666 8.40119ZM6.99411 8.71702L6.62945 8.37494L6.62945 8.37494L6.99411 8.71702ZM4.39412 14.5257L4.8922 14.482V14.482L4.39412 14.5257ZM1.38281 10.2818C1.38281 13.0466 2.7062 14.7097 4.26945 15.6243L4.77442 14.7611C3.49049 14.01 2.38281 12.6609 2.38281 10.2818H1.38281ZM1.98456 7.67981C1.83595 8.18235 1.68751 8.68404 1.57662 9.12255C1.46898 9.54824 1.38281 9.96535 1.38281 10.2818H2.38281C2.38281 10.1036 2.43785 9.79582 2.5461 9.36771C2.65112 8.95243 2.79329 8.47137 2.94351 7.96338L1.98456 7.67981ZM2.25471 6.75211C2.16865 7.05725 2.07636 7.36934 1.98456 7.67981L2.94351 7.96338C3.03499 7.65401 3.12909 7.33582 3.21716 7.02357L2.25471 6.75211ZM2.66249 3.97871C2.66249 4.94224 2.51811 5.81819 2.25471 6.75211L3.21716 7.02357C3.50062 6.01854 3.66249 5.05035 3.66249 3.97871H2.66249ZM5.79327 7.81277C5.60057 5.68111 4.24611 4.25316 3.48909 3.60011L2.8359 4.3573C3.51952 4.94704 4.63939 6.15562 4.79733 7.9028L5.79327 7.81277ZM6.2307 4.68285C6.10039 5.61296 5.86242 6.23549 5.62461 6.65849C5.38841 7.07862 5.14144 7.32189 4.95891 7.48786L5.63168 8.22771C5.85781 8.02209 6.18828 7.69641 6.49629 7.14856C6.80268 6.6036 7.07567 5.85915 7.22103 4.8216L6.2307 4.68285ZM6.25797 4.48761C6.24907 4.55141 6.24001 4.61641 6.2307 4.68285L7.22103 4.8216C7.23039 4.75477 7.2395 4.68943 7.24839 4.62568L6.25797 4.48761ZM8.00807 0.269085C7.34558 1.01909 6.95934 1.60606 6.71437 2.26542C6.47583 2.9075 6.38259 3.59363 6.25797 4.48761L7.24839 4.62568C7.37739 3.70028 7.45893 3.13275 7.65177 2.61369C7.83819 2.11192 8.13995 1.6303 8.75755 0.931111L8.00807 0.269085ZM9.78912 4.15794C9.44755 3.28499 9.08015 2.34844 8.87975 0.544882L7.88587 0.655313C8.10008 2.58323 8.50182 3.61238 8.85787 4.52232L9.78912 4.15794ZM10.4859 9.83707C10.6128 8.25055 10.5715 7.15755 10.427 6.28799C10.282 5.41492 10.0358 4.78838 9.78912 4.15794L8.85787 4.52232C9.10368 5.15053 9.31428 5.69153 9.44056 6.45184C9.56742 7.21567 9.61187 8.22188 9.48906 9.75735L10.4859 9.83707ZM9.83115 9.29403C9.78399 9.32709 9.73176 9.36364 9.68549 9.3987L10.2894 10.1957C10.318 10.1741 10.3537 10.149 10.4053 10.1128L9.83115 9.29403ZM11.6256 5.84583C11.4399 7.11166 11.0905 7.89329 10.7526 8.3897C10.417 8.88267 10.0743 9.12349 9.83115 9.29403L10.4053 10.1128C10.6758 9.9231 11.1395 9.59841 11.5793 8.95242C12.0167 8.30987 12.4114 7.37908 12.615 5.9909L11.6256 5.84583ZM13.8576 12.9074C15.3115 9.60237 13.3991 6.6028 12.4937 5.58588L11.7468 6.25085C12.5677 7.17288 14.1544 9.74916 12.9423 12.5048L13.8576 12.9074ZM11.3242 15.7305C12.2962 15.1865 13.2417 14.3076 13.8576 12.9074L12.9423 12.5048C12.4231 13.685 11.6394 14.4082 10.8359 14.8579L11.3242 15.7305ZM11.5457 15.4763C11.5712 15.4111 11.5953 15.3448 11.6181 15.2773L10.6707 14.9572C10.6528 15.0103 10.634 15.062 10.6144 15.1122L11.5457 15.4763ZM11.6181 15.2773C11.9402 14.3241 11.6974 13.2553 11.3536 12.4414C11.1775 12.0248 10.9641 11.6482 10.753 11.3514C10.5576 11.0765 10.3178 10.8031 10.0702 10.6738L9.60731 11.5602C9.60673 11.5599 9.64292 11.5815 9.7128 11.6536C9.77751 11.7205 9.85447 11.8133 9.93805 11.9309C10.1052 12.1659 10.2835 12.4782 10.4324 12.8306C10.7383 13.5547 10.8777 14.3448 10.6707 14.9572L11.6181 15.2773ZM9.34051 11.0755C9.28714 11.7156 8.97882 12.122 8.67847 12.3774C8.52593 12.5071 8.37609 12.5967 8.26557 12.6532C8.2107 12.6812 8.16668 12.7005 8.13848 12.712C8.12442 12.7178 8.11441 12.7216 8.10909 12.7236C8.10643 12.7246 8.10495 12.7251 8.10474 12.7251C8.10464 12.7252 8.10485 12.7251 8.10538 12.7249C8.10565 12.7248 8.106 12.7247 8.10644 12.7246C8.10665 12.7245 8.10689 12.7244 8.10715 12.7243C8.10728 12.7243 8.10749 12.7242 8.10755 12.7242C8.10777 12.7241 8.10799 12.724 8.2661 13.1984C8.42422 13.6727 8.42445 13.6727 8.42469 13.6726C8.42477 13.6725 8.42501 13.6725 8.42519 13.6724C8.42553 13.6723 8.4259 13.6722 8.42629 13.672C8.42708 13.6718 8.42795 13.6715 8.42891 13.6711C8.43083 13.6705 8.43311 13.6697 8.43573 13.6688C8.44097 13.6669 8.44759 13.6646 8.45551 13.6617C8.47133 13.6558 8.49237 13.6477 8.51792 13.6373C8.56895 13.6163 8.63841 13.5856 8.72055 13.5437C8.88404 13.4601 9.10234 13.3296 9.32627 13.1392C9.77888 12.7543 10.2569 12.1201 10.337 11.1585L9.34051 11.0755ZM8.54503 12.7834C7.95096 12.3841 7.66746 11.908 7.5667 11.2633C7.45967 10.5785 7.55784 9.69484 7.79695 8.49925L6.81637 8.30313C6.57577 9.50613 6.44193 10.5427 6.57869 11.4177C6.72171 12.3327 7.15779 13.0559 7.98718 13.6134L8.54503 12.7834ZM6.9638 8.03726C6.85719 8.1377 6.74452 8.25227 6.62945 8.37494L7.35877 9.0591C7.46442 8.94648 7.56215 8.84744 7.64953 8.76512L6.9638 8.03726ZM6.62945 8.37494C5.1071 9.99778 3.68512 12.1671 3.89603 14.5695L4.8922 14.482C4.72015 12.5222 5.88523 10.6299 7.35877 9.0591L6.62945 8.37494ZM3.89603 14.5695C3.91834 14.8236 3.96699 15.0816 4.04283 15.3357L5.00105 15.0497C4.94464 14.8607 4.90864 14.6692 4.8922 14.482L3.89603 14.5695Z" fill="#FB541F"></path>
+            </svg>
+            Бонусы
+        </div>
+    </div>
+
+    <div class="goods-grid">
+        
+        <div class="goods-card" onclick="openProductPage()">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button" onclick="event.stopPropagation()">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/h1b/hd6/643770562314547d71.jpg?format=preview-large" alt="Apple 20W Adapter">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 12</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">1 600 ₸</div>
+                </div>
+                <div class="goods-title">Apple 20W USB-C Power Adapter белый</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">4.8</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(15108)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">534 ₸</span>
+                    <span class="goods-instalment-term">x 3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/pb3/p40/641680037d71.jpg?format=preview-large" alt="iPhone 17 Pro">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-bonus">23 581 Б</div>
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">844 780 ₸</div>
+                    <div class="goods-bonus-subtext"><span class="goods-bonus-price">762 453 ₸</span> с учетом Бонус...</div>
+                </div>
+                <div class="goods-title">Apple iPhone 17 Pro 256Gb NanoSIM+eSIM серебристый</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(1397)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">50 369 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/hcb/h97/873093868093747d71.jpg?format=preview-large" alt="AirPods 4">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-bonus">1 807 Б</div>
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">99 984 ₸</div>
+                    <div class="goods-bonus-subtext"><span class="goods-bonus-price">58 442 ₸</span> с учетом Бонусов</div>
+                </div>
+                <div class="goods-title">Наушники Apple AirPods 4 белый</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">4.9</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(4558)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">10 095 ₸</span>
+                    <span class="goods-instalment-term">x 12</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/he7/hb1/868877580042547d71.html?format=preview-large" alt="Яндекс Станция 2">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-bonus">977 Б</div>
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-ad-label">Реклама</div>
+                <div class="goods-price-section">
+                    <div class="goods-price">32 586 ₸</div>
+                    <div class="goods-bonus-subtext"><span class="goods-bonus-price">31 609 ₸</span> с учетом Бонусов</div>
+                </div>
+                <div class="goods-title">Яндекс Станция Лайт 2 фиолетовый</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(5382)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">2 716 ₸</span>
+                    <span class="goods-instalment-term">x 12</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/p4a/ped/859959167d71.jpg?format=preview-large" alt="Apple iPhone 17 Pro Max">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-ad-label">Реклама</div>
+                <div class="goods-price-section">
+                    <div class="goods-price">1 219 992 ₸</div>
+                </div>
+                <div class="goods-title">Apple iPhone 17 Pro Max 512Gb Dual eSim синий + подарок</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">50 833 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/p14/ped/1598076337d71.jpg?format=preview-large" alt="Apple MacBook Air 13 2025">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">870 189 ₸</div>
+                </div>
+                <div class="goods-title">Apple MacBook Air 13 2025 13.6" / 24 Гб / SSD 512 Гб / macOS / MC6A4RU/A</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(5)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">36 258 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/p81/pfc/1216428067d71.jpg?format=preview-large" alt="Apple MacBook Neo 13 2026">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">449 000 ₸</div>
+                </div>
+                <div class="goods-title">Apple MacBook Neo 13 2026 13" / 8 Гб / SSD 512 Гб / macOS / MHFC4RU/A</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(25)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">18 709 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/p37/p87/221581727d71.jpg?format=preview-large" alt="Apple MacBook Air 13 2022">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">615 000 ₸</div>
+                </div>
+                <div class="goods-title">Apple MacBook Air 13 2022 13.6" / 16 Гб / SSD 256 Гб / macOS / MC7X4</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(108)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">25 625 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="https://resources.cdn-kaspi.kz/img/m/p/ped/p96/158466508.?format=gallery-medium" alt="Бланк документа Накладная А5">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 3</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-ad-label">Реклама</div>
+                <div class="goods-price-section">
+                    <div class="goods-price">1 014 ₸</div>
+                </div>
+                <div class="goods-title">Бланк документа Накладная А5, А5, листов 100 шт</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(28)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">338 ₸</span>
+                    <span class="goods-instalment-term">x 3</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/pfe/pfa/112108727d71.jpg?format=preview-large" alt="Apple Mac Mini 2024">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-ad-label">Реклама</div>
+                <div class="goods-price-section">
+                    <div class="goods-price">417 357 ₸</div>
+                </div>
+                <div class="goods-title">Apple Mac Mini 2024 MU9D3 серебристый</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(57)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">17 390 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/pdb/p9d/1404834007d71.jpg?format=preview-large" alt="Смарт-очки Ray-Ban Meta">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">271 993 ₸</div>
+                </div>
+                <div class="goods-title">Смарт-очки Ray-Ban Meta Wayfarer Gen 2 Graphite</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(33)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">11 334 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/hf3/h89/644560539812147d71.jpg?format=preview-large" alt="Механические Tissot">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 12</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">481 698 ₸</div>
+                </div>
+                <div class="goods-title">Механические Tissot T137.407.11.051.00 нержавеющая сталь</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(18)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">40 142 ₸</span>
+                    <span class="goods-instalment-term">x 12</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/ped/pf9/663137387d71.jpg?format=preview-large" alt="Apple Watch SE GPS Gen 3">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 24</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">132 802 ₸</div>
+                </div>
+                <div class="goods-title">Apple Watch SE GPS Gen 3 2025 S/M 40 мм черный-черный</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(28)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">5 534 ₸</span>
+                    <span class="goods-instalment-term">x 24</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-card">
+            <div class="goods-media">
+                <button class="wishlist-btn" type="button">
+                    <svg class="wishlist-icon" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                </button>
+                <div class="goods-img-frame">
+                    <img class="goods-img" src="../resources.cdn-kaspi.kz/img/m/p/pb5/pcf/516035127d71.jpg?format=preview-large" alt="Зарядное устройство Ugreen X755">
+                    <div class="goods-badges-container">
+                        <div class="pcs-ad-grid__item-badge">
+                            <span class="pcs-shop__badge-loan-display">0 • 0 • 6</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="goods-carousel-dots" aria-hidden="true">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+            </div>
+            <div class="goods-info-block">
+                <div class="goods-price-section">
+                    <div class="goods-price">15 990 ₸</div>
+                </div>
+                <div class="goods-title">Зарядное устройство Ugreen X755 (25871) USB Type-C</div>
+                <div class="goods-rating-row">
+                    <span class="rating-val">5.0</span>
+                    <svg class="star-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span class="reviews-count">(83)</span>
+                </div>
+                <div class="goods-instalment-row">
+                    <span class="goods-instalment-badge">2 665 ₸</span>
+                    <span class="goods-instalment-term">x 6</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom infinite scroll indicator -->
+    <div class="bottom-scroll-indicator" aria-hidden="true">
+        <div class="bottom-scroll-indicator__spinner"></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active">
+            <svg class="nav-icon nav-icon--home" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4.5 10.2 12 4.2l7.5 6V19a1.2 1.2 0 0 1-1.2 1.2H14.2v-5.4H9.8V20.2H5.7A1.2 1.2 0 0 1 4.5 19V10.2z"/>
+            </svg>
+            <span>Главная</span>
+        </a>
+        <span class="nav-item nav-item--inert" role="presentation">
+            <span class="nav-mask-icon nav-mask-icon--qr" aria-hidden="true"></span>
+            <span>Kaspi QR</span>
+        </span>
+        <span class="nav-item nav-item--inert" role="presentation">
+            <span class="nav-icon-wrap">
+                <span class="nav-mask-icon nav-mask-icon--chat" aria-hidden="true"></span>
+                <span class="nav-badge" aria-label="16 непрочитанных сообщений">16</span>
+            </span>
+            <span>Сообщения</span>
+        </span>
+        <span class="nav-item nav-item--inert" role="presentation">
+            <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="4" y1="7" x2="20" y2="7"/>
+                <line x1="4" y1="12" x2="20" y2="12"/>
+                <line x1="4" y1="17" x2="20" y2="17"/>
+            </svg>
+            <span>Сервисы</span>
+        </span>
+    </nav>
+
+    <div id="shop-loader" class="shop-loader hidden" aria-hidden="true">
+        <button type="button" class="shop-loader-close" onclick="closeShopLoader()" aria-label="Закрыть">×</button>
+        <div class="shop-loader-content">
+            <div class="shop-loader-icon">
+                <img src="assets/demo.png" alt="Магазин">
+            </div>
+            <p class="shop-loader-title" style="font-weight: 400;">Магазин</p>
+            <div class="shop-loader-spinner" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <div id="bank-pin-overlay" class="bank-pin-overlay hidden bank-pin-overlay--instant" aria-hidden="true">
+        <div class="bank-pin-top">
+            <button type="button" class="bank-pin-exit" onclick="closeBankPin()" aria-label="Выход">
+                <img class="bank-pin-exit-img" src="assets/bank-exit.png" alt="">
+            </button>
+        </div>
+        <div class="bank-pin-body">
+            <div class="bank-pin-avatar" style="display: flex; flex-direction: column; align-items: center;" aria-hidden="true">
+                <img class="bank-pin-avatar-img" src="assets/bank-avatar.png" alt="">
+                <div id="pin-shortname-display" style="text-align: center; font-weight: 400; margin-top: 8px; font-size: 15px;"></div>
+            </div>
+            <div class="bank-pin-code-block">
+                <h2 class="bank-pin-title">Код доступа</h2>
+                <div class="bank-pin-dots" id="bank-pin-dots" aria-hidden="true">
+                    <span class="bank-pin-dot"></span>
+                    <span class="bank-pin-dot"></span>
+                    <span class="bank-pin-dot"></span>
+                    <span class="bank-pin-dot"></span>
+                </div>
+            </div>
+        </div>
+        <div class="bank-pin-keypad">
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('1', this)">1</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('2', this)">2</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('3', this)">3</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('4', this)">4</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('5', this)">5</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('6', this)">6</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('7', this)">7</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('8', this)">8</button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('9', this)">9</button>
+            <button type="button" class="bank-pin-key bank-pin-key--icon bank-pin-key--face" aria-label="Face ID">
+                <img class="bank-pin-faceid-img" src="assets/bank-faceid.png" alt="">
+            </button>
+            <button type="button" class="bank-pin-key" onclick="bankPinDigit('0', this)">0</button>
+            <button type="button" id="bank-pin-backspace" class="bank-pin-key bank-pin-key--icon bank-pin-key--backspace" onclick="bankPinBackspace()" aria-label="Удалить">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/>
+                    <path d="m12.5 9.5 5 5"/>
+                    <path d="m17.5 9.5-5 5"/>
+                </svg>
+            </button>
+        </div>
+        <div class="bank-pin-footer">
+            <button type="button" class="bank-pin-forgot">Забыли код доступа?</button>
+        </div>
+    </div>
+
+    <div id="secret-card-overlay" class="secret-card-overlay hidden" aria-hidden="true">
+        <div class="secret-card-top">
+            <button type="button" class="secret-card-exit" onclick="closeSecretCardMenu()" aria-label="Выход">
+                <img class="secret-card-exit-img" src="assets/bank-exit.png" alt="">
+            </button>
+        </div>
+        <div class="secret-card-body">
+            <h2 class="secret-card-title">Данные карты</h2>
+            <div class="secret-card-form">
+                <div class="secret-card-field">
+                    <label class="secret-card-label">Номер карты</label>
+                    <input type="text" class="secret-card-input" id="secret-card-number" placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatCardNumber(this)">
+                </div>
+                <div class="secret-card-field">
+                    <label class="secret-card-label">Баланс Kaspi Gold</label>
+                    <input type="text" class="secret-card-input" id="secret-card-gold-balance" placeholder="8410" oninput="formatBalance(this)">
+                </div>
+                <div class="secret-card-field">
+                    <label class="secret-card-label">Баланс Депозита</label>
+                    <input type="text" class="secret-card-input" id="secret-card-deposit-balance" placeholder="1000" oninput="formatBalance(this)">
+                </div>
+                <div class="secret-card-field">
+                    <label class="secret-card-label">Баланс Бонусов</label>
+                    <input type="text" class="secret-card-input" id="secret-card-bonus-balance" placeholder="170,51">
+                </div>
+                <button type="button" class="secret-card-btn" onclick="saveSecretCardData()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="bank-loader" class="bank-loader hidden" aria-hidden="true">
+        <div class="bank-loader-spinner" aria-hidden="true"></div>
+    </div>
+    
+
+    <script src="common.js"></script>
+    <script>
+        var BANK_PIN_CODE = "0001";
+        var bankPinValue = "";
+        var targetPage = "";
+
+        // --- СЛУЧАЙНЫЙ ПОРЯДОК КАРТОЧЕК "ВЫ НЕДАВНО СМОТРЕЛИ" ---
+        function shuffleRecentlyViewed() {
+            var scrollContainer = document.querySelector('.recently-viewed-scroll');
+            if (scrollContainer) {
+                var cards = Array.from(scrollContainer.querySelectorAll('.recently-viewed-card'));
+                // Fisher-Yates shuffle
+                for (var i = cards.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    [cards[i], cards[j]] = [cards[j], cards[i]];
+                }
+                // Перемещаем карточки в новый порядок
+                cards.forEach(function(card) {
+                    scrollContainer.appendChild(card);
+                });
+            }
+        }
+        
+        // --- СЛУЧАЙНЫЙ ПОРЯДОК КАРТОЧЕК В НИЖНЕЙ СЕТКЕ (goods-grid) ---
+        function shuffleGoodsGrid() {
+            var goodsGrid = document.querySelector('.goods-grid');
+            if (goodsGrid) {
+                var cards = Array.from(goodsGrid.querySelectorAll('.goods-card'));
+                // Fisher-Yates shuffle
+                for (var i = cards.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    [cards[i], cards[j]] = [cards[j], cards[i]];
+                }
+                // Перемещаем карточки в новый порядок
+                cards.forEach(function(card) {
+                    goodsGrid.appendChild(card);
+                });
+            }
+        }
+
+        // --- СВАЙП БАННЕРОВ ---
+        var currentBannerIndex = 0;
+
+        function initBannerCarousel() {
+            var carousel = document.getElementById('bannerCarousel');
+            var bannerItems = carousel.querySelectorAll('.banner-item');
+            var dots = document.querySelectorAll('.banner-dot');
+
+            // Случайный выбор начального баннера (0 или 1)
+            currentBannerIndex = Math.floor(Math.random() * 2);
+
+            function showBanner(index) {
+                bannerItems.forEach(function(item, i) {
+                    item.classList.toggle('active', i === index);
+                });
+                dots.forEach(function(dot, i) {
+                    dot.classList.toggle('active', i === index);
+                });
+            }
+
+            // Показываем случайно выбранный баннер при загрузке
+            showBanner(currentBannerIndex);
+
+            // Свайп по касанию
+            var touchStartX = 0;
+            var touchEndX = 0;
+
+            carousel.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+
+            carousel.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+
+            function handleSwipe() {
+                var swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold) {
+                    // Свайп влево - следующий баннер
+                    currentBannerIndex = (currentBannerIndex + 1) % bannerItems.length;
+                    showBanner(currentBannerIndex);
+                } else if (touchEndX > touchStartX + swipeThreshold) {
+                    // Свайп вправо - предыдущий баннер
+                    currentBannerIndex = (currentBannerIndex - 1 + bannerItems.length) % bannerItems.length;
+                    showBanner(currentBannerIndex);
+                }
+            }
+        }
+        
+        // Вызываем при загрузке страницы
+        window.addEventListener('DOMContentLoaded', function() {
+            shuffleRecentlyViewed();
+            shuffleGoodsGrid();
+            initBannerCarousel();
+        });
+        // --- КОНЕЦ СВАЙПА БАННЕРОВ ---
+
+        // --- КОД ДЛЯ МАГАЗИНА ---
+        function openShopLoader() {
+            var loader = document.getElementById("shop-loader");
+            if (loader) {
+                // Показываем окно загрузки
+                loader.classList.remove("hidden");
+                loader.setAttribute("aria-hidden", "false");
+                document.body.style.overflow = "hidden"; // Блокируем фон
+
+                // Ждем 10 секунды и "перекидываем обратно" (закрываем лоадер)
+                setTimeout(function() {
+                    closeShopLoader();
+                }, 10000);
+            }
+        }
+
+        function closeShopLoader() {
+            var loader = document.getElementById("shop-loader");
+            if (loader) {
+                // Прячем окно загрузки
+                loader.classList.add("hidden");
+                loader.setAttribute("aria-hidden", "true");
+                document.body.style.overflow = "auto"; // Разблокируем фон
+            }
+        }
+        // --- КОНЕЦ КОДА ДЛЯ МАГАЗИНА ---
+
+        function openGovServices() {
+            openGovWithPin();
+        }
+
+        function openGovWithPin() {
+            if (KaspiApp.isAuthSessionValid()) {
+                KaspiApp.goTo("gov.html", false, "forward");
+                return;
+            }
+            showBankPin("gov.html");
+        }
+
+        function openBankPin() {
+            if (KaspiApp.isAuthSessionValid()) {
+                KaspiApp.goTo("bank.html", false, "forward");
+                return;
+            }
+            showBankPin("");
+        }
+
+        var workClickCount = 0;
+
+        // --- СЕКРЕТНОЕ МЕНЮ ДЛЯ ДАННЫХ КАРТЫ ---
+        var secretClickCount = 0;
+        var secretClickTimeout = null;
+
+        function handleSecretMenuClick() {
+            secretClickCount++;
+            
+            if (secretClickTimeout) {
+                clearTimeout(secretClickTimeout);
+            }
+            
+            secretClickTimeout = setTimeout(function() {
+                secretClickCount = 0;
+            }, 2000);
+            
+            if (secretClickCount === 5) {
+                secretClickCount = 0;
+                openSecretCardMenu();
+            }
+        }
+
+        function openSecretCardMenu() {
+            var overlay = document.getElementById("secret-card-overlay");
+            if (overlay) {
+                overlay.classList.remove("hidden");
+                overlay.setAttribute("aria-hidden", "false");
+                loadSecretCardData();
+            }
+        }
+
+        function closeSecretCardMenu() {
+            var overlay = document.getElementById("secret-card-overlay");
+            if (overlay) {
+                overlay.classList.add("hidden");
+                overlay.setAttribute("aria-hidden", "true");
+            }
+        }
+
+        function formatCardNumber(input) {
+            var value = input.value.replace(/\D/g, '');
+            var formatted = '';
+            for (var i = 0; i < value.length && i < 16; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formatted += ' ';
+                }
+                formatted += value[i];
+            }
+            input.value = formatted;
+        }
+
+        function formatExpiry(input) {
+            var value = input.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                input.value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            } else {
+                input.value = value;
+            }
+        }
+
+        function formatPhone(input) {
+            var value = input.value.replace(/\D/g, '');
+            if (value.length === 0) {
+                input.value = '';
+                return;
+            }
+            var formatted = '';
+            if (value.length > 0) {
+                formatted += value.substring(0, 1);
+            }
+            if (value.length > 1) {
+                formatted += ' ' + value.substring(1, 4);
+            }
+            if (value.length > 4) {
+                formatted += ' ' + value.substring(4, 7);
+            }
+            if (value.length > 7) {
+                formatted += ' ' + value.substring(7, 11);
+            }
+            input.value = formatted;
+        }
+
+        function formatBalance(input) {
+            var value = input.value;
+            // Убираем знак тенге если он есть в конце
+            if (value.endsWith(' ₸')) {
+                value = value.slice(0, -2);
+            }
+            input.value = value + ' ₸';
+        }
+
+        function capitalizeName(input) {
+            input.value = input.value.toUpperCase();
+        }
+
+        function loadSecretCardData() {
+            try {
+                var data = JSON.parse(localStorage.getItem('kaspi_secret_card_data') || '{}');
+                if (data.cardNumber) document.getElementById('secret-card-number').value = data.cardNumber;
+                if (data.goldBalance) document.getElementById('secret-card-gold-balance').value = data.goldBalance;
+                if (data.depositBalance) document.getElementById('secret-card-deposit-balance').value = data.depositBalance;
+                if (data.bonusBalance) document.getElementById('secret-card-bonus-balance').value = data.bonusBalance;
+                else document.getElementById('secret-card-bonus-balance').value = '170,51';
+            } catch (e) {
+                console.error('Failed to load secret card data:', e);
+            }
+        }
+
+        function saveSecretCardData() {
+            try {
+                var data = {
+                    cardNumber: document.getElementById('secret-card-number').value,
+                    goldBalance: document.getElementById('secret-card-gold-balance').value,
+                    depositBalance: document.getElementById('secret-card-deposit-balance').value,
+                    bonusBalance: document.getElementById('secret-card-bonus-balance').value
+                };
+                localStorage.setItem('kaspi_secret_card_data', JSON.stringify(data));
+                localStorage.setItem('kaspi_gold_balance', data.goldBalance);
+                localStorage.setItem('kaspi_deposit_balance', data.depositBalance);
+                localStorage.setItem('kaspi_bonus_balance', data.bonusBalance);
+                closeSecretCardMenu();
+            } catch (e) {
+                console.error('Failed to save secret card data:', e);
+            }
+        }
+        // --- КОНЕЦ СЕКРЕТНОГО МЕНЮ ---
+        var workClickTimer = null;
+
+        function handleWorkClick() {
+            workClickCount++;
+
+            if (workClickTimer) {
+                clearTimeout(workClickTimer);
+            }
+
+            workClickTimer = setTimeout(function() {
+                workClickCount = 0;
+            }, 2000);
+
+            if (workClickCount >= 5) {
+                workClickCount = 0;
+                if (workClickTimer) {
+                    clearTimeout(workClickTimer);
+                    workClickTimer = null;
+                }
+                KaspiApp.clearAllIdData();
+                KaspiApp.goTo('id-entry.html', false, 'forward');
+                return;
+            }
+
+            if (!KaspiApp.isIdDataComplete()) {
+                KaspiApp.goTo('id-entry.html', false, 'forward');
+            }
+        }
+
+        var nameDisplay = document.getElementById('pin-shortname-display');
+        if (nameDisplay) {
+            var data = KaspiApp.getIdData();
+            nameDisplay.textContent = data.shortname || "";
+        }
+
+        function showBankPin(page) {
+            targetPage = page || "";
+            bankPinValue = "";
+            updateBankPinDots();
+            var overlay = document.getElementById("bank-pin-overlay");
+                overlay.classList.remove("hidden");
+                overlay.setAttribute("aria-hidden", "false");
+            document.body.classList.add("hide-bottom-nav");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeBankPin() {
+            targetPage = "";
+            bankPinValue = "";
+            updateBankPinDots();
+            document.getElementById("bank-pin-overlay").classList.add("hidden");
+            document.getElementById("bank-pin-overlay").setAttribute("aria-hidden", "true");
+            document.getElementById("bank-loader").classList.add("hidden");
+            document.getElementById("bank-loader").setAttribute("aria-hidden", "true");
+            document.body.classList.remove("hide-bottom-nav");
+            document.body.style.overflow = "";
+        }
+
+        function updateBankPinDots() {
+            document.querySelectorAll("#bank-pin-dots .bank-pin-dot").forEach(function (dot, i) {
+                dot.classList.remove("filled", "error");
+                if (i < bankPinValue.length) dot.classList.add("filled");
+            });
+            var backspace = document.getElementById("bank-pin-backspace");
+            if (backspace) {
+                backspace.classList.toggle("is-visible", bankPinValue.length > 0);
+            }
+        }
+
+        function flashBankPinKey(btn) {
+            if (!btn || btn.classList.contains("bank-pin-key--icon")) return;
+            btn.classList.add("is-pressed");
+            setTimeout(function () { btn.classList.remove("is-pressed"); }, 100);
+        }
+
+        function bankPinDigit(d, btn) {
+            flashBankPinKey(btn);
+            if (bankPinValue.length >= 4) return;
+            bankPinValue += d;
+            updateBankPinDots();
+            if (bankPinValue.length === 4) {
+                setTimeout(checkBankPin, 120);
+            }
+        }
+
+        function bankPinBackspace() {
+            bankPinValue = bankPinValue.slice(0, -1);
+            updateBankPinDots();
+        }
+
+        function checkBankPin() {
+            if (bankPinValue !== BANK_PIN_CODE) {
+                document.querySelectorAll("#bank-pin-dots .bank-pin-dot").forEach(function (dot) {
+                    dot.classList.add("error");
+                });
+                setTimeout(function () {
+                    bankPinValue = "";
+                    updateBankPinDots();
+                }, 400);
+                return;
+            }
+
+            var pinOverlay = document.getElementById("bank-pin-overlay");
+            
+            // Устанавливаем общую сессию аутентификации
+            KaspiApp.markAuthSessionValid();
+            
+            if (targetPage === "gov.html") {
+                KaspiApp.markGovPinVerified();
+                bankPinValue = "";
+                updateBankPinDots();
+
+                // Slide down PIN overlay smoothly
+                pinOverlay.classList.remove("bank-pin-overlay--instant");
+                pinOverlay.classList.add("hidden");
+                pinOverlay.setAttribute("aria-hidden", "true");
+                document.body.classList.remove("hide-bottom-nav");
+                document.body.style.overflow = "";
+
+                // Navigate to gov.html after animation
+                setTimeout(function() {
+                    KaspiApp.goTo("gov.html", false, "forward");
+                }, 300);
+                return;
+            }
+
+            pinOverlay.classList.remove("bank-pin-overlay--instant");
+            pinOverlay.classList.add("hidden");
+            pinOverlay.setAttribute("aria-hidden", "true");
+            document.body.classList.remove("hide-bottom-nav");
+            document.body.style.overflow = "";
+            bankPinValue = "";
+            updateBankPinDots();
+
+            // Navigate to bank.html after animation
+            setTimeout(function() {
+                KaspiApp.goTo("bank.html", false, "forward");
+            }, 300);
+                }
+                
+        window.addEventListener("DOMContentLoaded", function () {
+        // Инициализируем навигацию с ПЕРЕХВАТОМ события onBack
+        KaspiApp.initEdgeBackNavigation({
+            canGo: function () {
+                var pin = document.getElementById("bank-pin-overlay");
+                if (pin && !pin.classList.contains("hidden")) return true;
+                return false;
+            },
+            onBack: function () {
+                var bottomNav = document.querySelector(".bottom-nav");
+                if (bottomNav) {
+                    bottomNav.style.display = 'flex';
+                    bottomNav.classList.remove('hidden');
+                }
+                // document.body.style.overflow = "auto"; // Если нужно, оставьте только это
+                return true; // Позволяем продолжить
+        }
+        });
+
+        // Логика скелетона - используем умный скелетон
+        var skeleton = document.getElementById("skeleton-screen");
+        if (!skeleton) return;
+
+        // Check if skeleton was already shown in this session
+        var skeletonShown = sessionStorage.getItem('kaspi_skeleton_shown');
+        if (skeletonShown === 'true') {
+            skeleton.style.display = 'none';
+            KaspiApp.markAppLoaded();
+            return;
+        }
+
+        // Show skeleton for first time in this session
+        skeleton.classList.remove('skeleton-fade-out');
+        skeleton.style.display = 'flex';
+
+        // Используем умный скелетон с предзагрузкой
+        KaspiApp.initSmartSkeleton('skeleton-screen', function(markReady) {
+            // Предзагружаем изображения в фоне
+            var imagesToPreload = document.querySelectorAll('.banner-img, .service-img, .product-badge, .goods-img, .recently-viewed-img');
+            var imagesLoaded = 0;
+            var totalImages = imagesToPreload.length;
+
+            if (totalImages === 0) {
+                markReady();
+                return;
+            }
+
+            imagesToPreload.forEach(function(img) {
+                if (img.complete) {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        markReady();
+                    }
+                } else {
+                    img.onload = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                    img.onerror = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                }
+            });
+
+            // Таймаут на случай если изображения не загрузятся
+            setTimeout(function() {
+                markReady();
+            }, 500);
+        });
+
+        sessionStorage.setItem('kaspi_skeleton_shown', 'true');
+        KaspiApp.markAppLoaded();
+    });
+
+    </script>
+</body>
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/index.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:43 GMT -->
+</html>     

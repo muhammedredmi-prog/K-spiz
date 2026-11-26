@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/gov.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:46 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=461c0f28-a224-431b-95e2-008d78734c0b
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Demo Banking App</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Demo App">
+    <meta name="application-name" content="Demo App">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="assets/demo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Open+Sans:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        html, body { touch-action: manipulation; -ms-touch-action: manipulation; height: 100%; height: 100dvh; margin: 0; padding: 0; overflow: hidden; }
+        :root { --icon-brand: #f14635; }
+        html { background: #f5f5f5; }
+        body { background: transparent; color: #1a1a1a; display: flex; flex-direction: column; min-height: 100%; min-height: 100dvh; }
+
+        .gov-header { padding: 0 16px 0; background: #fff; position: fixed; top: 0; left: 0; right: 0; z-index: 99999; }
+        body.skeleton-active .gov-header .gov-tabs-wrap { display: none; }
+        .gov-topbar { display: flex; align-items: center; height: 44px; position: relative; }
+        .gov-back { width: 40px; height: 40px; border: none; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; margin-left: -8px; -webkit-tap-highlight-color: transparent; }
+        .gov-back svg { width: 24px; height: 24px; stroke: #1a1a1a; stroke-width: 2; fill: none; }
+        .gov-page-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 16px; font-weight: 700; }
+
+        .gov-tabs-wrap { margin: 7px 0 0; background: #f2f2f2; border-radius: 12px; padding: 2px; display: flex; }
+        .gov-tab { flex: 1; height: 36px; border: none; border-radius: 10px; font-size: 14.5px; font-weight: 530; cursor: pointer; background: transparent; color: #1a1a1a; }
+        .gov-tab.active { background: #ffffff; color: #1a1a1a; }
+
+        .gov-search-wrap { padding: 7px 16px 16px; position: fixed; top: 97px; left: 0; right: 0; background: #ffffff; z-index: 99998; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; }
+        .gov-search { width: 100%; height: 44px; border: none; border-radius: 12px; background: #f2f2f2; padding: 0 16px 0 44px; font-size: 17px; font-weight: 420; color: #1a1a1a; outline: none; }
+        .gov-search::placeholder { color: #c6c6c6; }
+        .gov-search-box { position: relative; }
+        .gov-search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 22px; height: 22px; pointer-events: none; }
+
+        .gov-content { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-top: 172px; padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: #f0f0f0; }
+
+        .gov-section { background: #ffffff; border-radius: 16px; margin-bottom: 8px; }
+        .gov-docs-scroll { display: flex; gap: 10px; padding: 16px 16px 12px; overflow-x: auto; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+        .gov-docs-scroll::-webkit-scrollbar { display: none; }
+        .gov-doc-card {
+            flex: 0 0 152px;
+            scroll-snap-align: start;
+            border-radius: 12px;
+            padding: 12px 10px 10px;
+            min-height: 105px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .gov-doc-card--id { background: #f1f2f4; }
+        .gov-doc-card--passport { background: #f1f2f4; }
+        .gov-doc-visual {
+            width: 100%;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+        .gov-doc-card--id .gov-doc-visual { background: #f1f2f4; }
+        .gov-doc-card--passport .gov-doc-visual { background: #f1f2f4; }
+        .gov-doc-label { font-size: 14px; font-weight: 450; line-height: 1.25; color: #1a1a1a; }
+
+        .doc-icon-img {
+            width: auto;
+            height: 45px;
+            max-width: 100%;
+            object-fit: contain;
+            object-position: left center;
+            display: block;
+        }
+
+        .gov-docs-link { display: inline-flex; align-items: center; gap: 4px; padding: 0 16px 16px; font-size: 16px; font-weight: 550; color: #2971cf; text-decoration: none; }
+        .gov-docs-link svg { width: 24px; height: 24px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+        .gov-section-header { padding: 16px 16px 8px; font-size: 16.5px; font-weight: 700; color: #000000; }
+        .gov-list-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-decoration: none; color: inherit; cursor: pointer; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+        .gov-list-item:active { background: #fafafa; }
+        .gov-list-item--inert,
+        .gov-docs-link--inert,
+        .gov-doc-card--inert,
+        .gov-tab--inert,
+        .nav-item--inert {
+            pointer-events: none;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        .gov-list-item--inert:active,
+        .gov-doc-card--inert:active { background: transparent; }
+        .gov-list-icon { width: 38px; height: 38px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; background: #f9f9f9; border-radius: 50%; }
+        .gov-mask-icon { width: 23px; height: 23px; display: block; background-color: var(--icon-brand); mask-size: contain; mask-repeat: no-repeat; mask-position: center; -webkit-mask-size: contain; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center; }
+        .gov-icon--file { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/file-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/file-500.svg"); }
+        .gov-icon--home-goods { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/home-goods-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/home-goods-500.svg"); }
+        .gov-icon--coins-add { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/coins-add-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/coins-add-500.svg"); }
+        .gov-icon--car-document { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/car-document-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/car-document-500.svg"); }
+        .gov-icon--tax-report { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/tax-report-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/tax-report-500.svg"); }
+        .gov-icon--declaration { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/declaration-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/declaration-500.svg"); }
+        .gov-icon--user { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/user-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/user-500.svg"); }
+        .gov-icon--drivers-license-change { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/drivers-license-change-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/drivers-license-change-500.svg"); }
+        .gov-icon--group { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/group-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/group-500.svg"); }
+        .gov-icon--car-credit { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/car-credit-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/car-credit-500.svg"); }
+        .gov-icon--penalty { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/penalty-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/penalty-500.svg"); }
+        .gov-icon--rings { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/rings-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/rings-500.svg"); }
+        .gov-icon--child { mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/child-500.svg"); -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/child-500.svg"); }
+        .gov-list-text { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; }
+        .gov-list-text--center { justify-content: center; }
+        .gov-list-title { display: block; width: 100%; font-size: 17px; font-weight: 450; line-height: 1.25; }
+        .gov-list-sub { display: block; width: 100%; font-size: 12px; font-weight: 420; color: #666666; margin-top: 4px; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .gov-list-sub--wrap { white-space: normal; }
+        .gov-list-chevron { width: 25px; height: 25px; stroke: #c8c8c8; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+        .bottom-nav {
+            position: fixed !important;
+            bottom: -5px !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100%;
+            min-height: 30px;
+            padding: 3px 0 calc(3px + env(safe-area-inset-bottom, 0px));
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            z-index: 99999;
+            box-shadow: none;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            top: auto !important;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 40px;
+            text-decoration: none;
+            color: #868686;
+            font-size: 11px;
+            font-weight: 400;
+            gap: 3px;
+            line-height: 1.1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-item.active {
+            color: #f14635;
+            font-weight: 500;
+            background-color: rgba(241, 70, 53, 0.1);
+            border-radius: 6px;
+        }
+
+        .nav-item--inert {
+            pointer-events: none;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        .nav-item.active .nav-icon {
+            stroke-width: 2.15;
+        }
+
+        .nav-icon {
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.55;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-icon--home {
+            width: 26px;
+            height: 26px;
+        }
+
+        .nav-icon .nav-fill {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .nav-mask-icon {
+            width: 25px;
+            height: 25px;
+            display: block;
+            background-color: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        .nav-mask-icon--qr {
+            width: 25px;
+            height: 25px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+        }
+
+        .nav-mask-icon--chat {
+            width: 24px;
+            height: 24px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+        }
+
+        .nav-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -5px;
+            right: -6px;
+            min-width: 19px;
+            height: 14px;
+            padding: 0 2px;
+            background-color: #f14635;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11.2px;
+            font-weight: 500;
+            line-height: 14px;
+            text-align: center;
+            border-radius: 999px;
+            letter-spacing: -0.5px;
+            box-sizing: border-box;
+            pointer-events: none;
+            box-shadow:
+                0 0 0 0.2px #b8b7b7,
+                0 0 0 0.9px #ffffff,
+                0 0 0 1.1px #cac9c9;
+        }
+        .gov-search[readonly] { pointer-events: none; cursor: default; }
+
+#skeleton-screen {
+    position: fixed; top: 0; left: 0; right: 0; bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+    background: #f5f5f5; z-index: 99998;
+    padding: 0; box-sizing: border-box;
+    display: flex; flex-direction: column; overflow: hidden;
+}
+.sk-anim {
+    background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+    background-size: 200% 100%;
+    animation: sk-shimmer 1.5s infinite linear;
+}
+@keyframes sk-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+
+/* Скелетон для табов */
+.sk-gov-tabs-container {
+    padding: 0 16px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-radius: 12px;
+    padding-top: 10px;
+}
+
+.sk-gov-tabs-section {
+    background: transparent;
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 5px;
+}
+
+.sk-gov-tabs {
+    display: flex;
+    gap: 8px;
+}
+.sk-gov-tab {
+    flex: 1;
+    height: 36px;
+    border-radius: 8px;
+}
+
+/* Скелетон для одной линии табов */
+.sk-gov-tabs-line {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+}
+
+/* Скелетон для поиска */
+.sk-gov-search-container {
+    padding: 0 16px;
+    margin-bottom: 0;
+}
+.sk-gov-search {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+}
+
+/* Блок цифровых документов: 2 квадрата/карточки (Паспорт и Удостоверение) */
+.sk-gov-docs-section {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 0 16px;
+}
+.sk-gov-docs-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    padding: 8px 0 12px;
+    margin-top: 0;
+}
+
+.sk-gov-search {
+    width: 100%;
+    height: 44px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+.sk-gov-doc-card {
+    flex: 1;
+    height: 105px; /* Высота карточек документов */
+    border-radius: 12px;
+}
+
+/* Скелетон для надписи "Все документы" под ними */
+.sk-gov-all-docs {
+    width: 110px;
+    height: 14px;
+    border-radius: 4px;
+    margin: 0 0 16px 0;
+    align-self: flex-start;
+    flex-shrink: 0;
+}
+
+/* Вертикальный список документов (7 разделов ниже) */
+.sk-gov-list-section {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 17px;
+    padding-bottom: 100px;
+}
+.sk-gov-list { 
+    display: flex; 
+    flex-direction: column; 
+    overflow-y: hidden;
+    padding: 0 16px;
+}
+.sk-gov-item { display: flex; align-items: center; gap: 16px; padding: 12px 0; }
+.sk-gov-icon { width: 42px; height: 42px; border-radius: 50%; flex-shrink: 0; }
+.sk-gov-lines { flex: 1; display: flex; flex-direction: column; }
+.sk-gov-line-1 { width: 95%; height: 16px; border-radius: 4px; }
+
+.skeleton-fade-out { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s ease, visibility 0.25s ease; }
+</style>
+</head>
+<body>
+<div id="skeleton-screen">
+    <div class="sk-gov-tabs-container">
+        <div class="sk-gov-tabs-section">
+            <div class="sk-anim sk-gov-tabs-line"></div>
+        </div>
+
+        <div class="sk-gov-tabs-section">
+            <div class="sk-anim sk-gov-tabs-line"></div>
+        </div>
+
+        <div class="sk-gov-docs-container">
+            <div class="sk-anim sk-gov-doc-card"></div>
+            <div class="sk-anim sk-gov-doc-card"></div>
+        </div>
+    </div>
+
+    <div class="sk-gov-list-section">
+        <div class="sk-gov-list">
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        <div class="sk-gov-item">
+            <div class="sk-anim sk-gov-icon"></div>
+            <div class="sk-gov-lines">
+                <div class="sk-anim sk-gov-line-1"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<header class="gov-header">
+    <div class="gov-topbar">
+        <button type="button" class="gov-back" onclick="KaspiApp.goBack('index.html')" aria-label="Назад">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="gov-page-title">Госуслуги</h1>
+    </div>
+
+    <div class="gov-section">
+        <div class="gov-tabs-wrap">
+            <button type="button" class="gov-tab active">Все услуги</button>
+            <button type="button" class="gov-tab gov-tab--inert" disabled aria-disabled="true">Мои заявки</button>
+        </div>
+    </div>
+</header>
+
+<div class="gov-content">
+<div class="gov-search-wrap">
+    <div class="gov-search-box">
+        <svg class="gov-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#c6c6c6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0-14 0m18 11l-6-6"/></svg>
+        <input type="search" class="gov-search" placeholder="Поиск по Госуслугам" readonly tabindex="-1" aria-disabled="true">
+    </div>
+</div>
+
+<div class="gov-section">
+    <section class="gov-docs-scroll" aria-label="Цифровые документы">
+        <article class="gov-doc-card gov-doc-card--id" onclick="openIdDocument()">
+            <div class="gov-doc-visual" aria-hidden="true">
+                <img class="doc-icon-img" src="assets/gov-id.png" alt="">
+            </div>
+            <span class="gov-doc-label">Удостоверение личности</span>
+        </article>
+        <article class="gov-doc-card gov-doc-card--passport gov-doc-card--inert" aria-disabled="true">
+            <div class="gov-doc-visual" aria-hidden="true">
+                <img class="doc-icon-img" src="assets/gov-passport.png" alt="">
+            </div>
+            <span class="gov-doc-label">Паспорт гражданина РК</span>
+        </article>
+    </section>
+
+    <div class="gov-docs-link gov-docs-link--inert" role="presentation" style="display: flex; justify-content: space-between; align-items: center; padding: 0 16px 16px;">Все документы <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+</div>
+
+<div class="gov-section">
+    <div class="gov-section-header">Популярные и новые</div>
+    <nav class="gov-list" aria-label="Популярные и новые">
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--user" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Стать самозанятым</span><span class="gov-list-sub">Открыть счет и начать принимать оплату в Kaspi.kz</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--car-document" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Переоформление автомобиля</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--home-goods" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Проверка прописки</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--home-goods" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Прописка</span><span class="gov-list-sub">Временная и постоянная</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--drivers-license-change" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Замена водительских прав</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+    </nav>
+</div>
+
+<div class="gov-section">
+    <div class="gov-section-header">Справки</div>
+    <nav class="gov-list" aria-label="Справки">
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--home-goods" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Справки по недвижимости</span><span class="gov-list-sub gov-list-sub--wrap">О наличии и отсутствии, об обременениях</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--group" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Социальные справки</span><span class="gov-list-sub gov-list-sub--wrap">Пенсионные, социальные, адресная помощь, пенсии и пособия</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+    </nav>
+</div>
+
+<div class="gov-section">
+    <div class="gov-section-header">Авто</div>
+    <nav class="gov-list" aria-label="Авто">
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--car-credit" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Замена техпаспорта</span><span class="gov-list-sub">При смене госномера, потере техпаспорта и другое</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--car-document" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Переоформление автомобиля</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--drivers-license-change" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Замена водительских прав</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--penalty" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Штрафы</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+    </nav>
+</div>
+
+<div class="gov-section">
+    <div class="gov-section-header">Семья и дети</div>
+    <nav class="gov-list" aria-label="Семья и дети">
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--rings" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Заявка на регистрацию брака</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--child" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Оформление свидетельства о рождении ребенка</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+    </nav>
+</div>
+
+<div class="gov-section">
+    <div class="gov-section-header">Бизнес и налоги</div>
+    <nav class="gov-list" aria-label="Бизнес и налоги">
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--user" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Стать самозанятым</span><span class="gov-list-sub">Открыть счет и начать принимать оплату в Kaspi.kz</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--user" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Регистрация ИП</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--declaration" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Декларация по форме 250</span><span class="gov-list-sub">Об активах и обязательствах</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--tax-report" aria-hidden="true"></span></span><span class="gov-list-text"><span class="gov-list-title">Декларация по форме 270</span><span class="gov-list-sub">О доходах и имуществе</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+        <div class="gov-list-item gov-list-item--inert" role="presentation"><span class="gov-list-icon"><span class="gov-mask-icon gov-icon--user" aria-hidden="true"></span></span><span class="gov-list-text gov-list-text--center"><span class="gov-list-title">Платежи для ИП</span></span><svg class="gov-list-chevron" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg></div>
+    </nav>
+</div>
+</div>
+
+<nav class="bottom-nav">
+    <a class='nav-item active' href='index-2.html'><svg class="nav-icon nav-icon--home" viewBox="0 0 24 24"><path d="M4.5 10.2 12 4.2l7.5 6V19a1.2 1.2 0 0 1-1.2 1.2H14.2v-5.4H9.8V20.2H5.7A1.2 1.2 0 0 1 4.5 19V10.2z"/></svg><span>Главная</span></a>
+    <span class="nav-item nav-item--inert" role="presentation"><span class="nav-mask-icon nav-mask-icon--qr" aria-hidden="true"></span><span>Kaspi QR</span></span>
+    <span class="nav-item nav-item--inert" role="presentation"><span class="nav-icon-wrap"><span class="nav-mask-icon nav-mask-icon--chat" aria-hidden="true"></span><span class="nav-badge" aria-label="16 непрочитанных сообщений">16</span></span><span>Сообщения</span></span>
+    <span class="nav-item nav-item--inert" role="presentation"><svg class="nav-icon" viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg><span>Сервисы</span></span>
+</nav>
+
+<script src="common.js"></script>
+<script>
+    function openIdDocument() {
+        KaspiApp.openIdDocument();
+    }
+
+
+    window.addEventListener("DOMContentLoaded", function() {
+        // Проверяем общую сессию аутентификации
+        if (!KaspiApp.isAuthSessionValid()) {
+            KaspiApp.goTo("index.html", true, "back");
+            return;
+        }
+        
+        // Предзагружаем index.html для быстрого возврата назад
+        var preloadLink = document.createElement('link');
+        preloadLink.rel = 'prefetch';
+        preloadLink.href = 'index.html';
+        document.head.appendChild(preloadLink);
+        
+        var skeleton = document.getElementById('skeleton-screen');
+        if (!skeleton) return;
+
+        // Проверяем флаг для отключения скелетона при возврате с id-form
+        var skipSkeleton = false;
+        try {
+            skipSkeleton = sessionStorage.getItem('kaspi_skip_gov_skeleton') === 'true';
+            sessionStorage.removeItem('kaspi_skip_gov_skeleton');
+        } catch (err) {
+            /* ignore */
+        }
+
+        if (skipSkeleton) {
+            // Пропускаем скелетон при возврате с id-form
+            skeleton.style.display = 'none';
+            KaspiApp.markGovLoaded();
+            return;
+        }
+
+        // Всегда показываем скелетон для плавной загрузки
+        skeleton.classList.remove('skeleton-fade-out');
+        document.body.classList.add('skeleton-active');
+
+        // Используем умный скелетон с авто-таймером и предзагрузкой
+        KaspiApp.initSmartSkeleton('skeleton-screen', function(markReady) {
+            // Предзагружаем контент в фоне
+            var imagesToPreload = document.querySelectorAll('.gov-doc-card img, .gov-mask-icon');
+            var imagesLoaded = 0;
+            var totalImages = imagesToPreload.length;
+
+            if (totalImages === 0) {
+                markReady();
+                return;
+            }
+
+            imagesToPreload.forEach(function(img) {
+                if (img.complete) {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        markReady();
+                    }
+                } else {
+                    img.onload = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                    img.onerror = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                }
+            });
+
+            // Таймаут на случай если изображения не загрузятся
+            setTimeout(function() {
+                markReady();
+            }, 500);
+        });
+    });
+
+    document.querySelectorAll(".gov-tab:not(.gov-tab--inert):not([disabled])").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+            document.querySelectorAll(".gov-tab:not(.gov-tab--inert)").forEach(function (t) {
+                t.classList.remove("active");
+            });
+            this.classList.add("active");
+        });
+    });
+
+    // Анимация шапки при скролле
+    var govContent = document.querySelector(".gov-content");
+    var govHeader = document.querySelector(".gov-header");
+    
+    if (govContent && govHeader) {
+        govContent.addEventListener("scroll", function () {
+            if (govContent.scrollTop > 10) {
+                govHeader.classList.add("scrolled");
+            } else {
+                govHeader.classList.remove("scrolled");
+            }
+        });
+    }
+
+</script>
+</body>
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/gov.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:50 GMT -->
+</html>

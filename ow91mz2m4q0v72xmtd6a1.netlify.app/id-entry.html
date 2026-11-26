@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/id-entry.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:51 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=461c0f28-a224-431b-95e2-008d78734c0b
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Данные удостоверения</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kaspi.kz">
+    <meta name="application-name" content="Kaspi.kz">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="../laaskakaps.netlify.app/main/img/1024x1024bb.html">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { touch-action: manipulation; -ms-touch-action: manipulation; }
+        body {
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1a1a1a;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .page-header {
+            display: flex; align-items: center;
+            padding: 14px 16px 12px;
+            position: sticky; top: 0; background: #fff;
+            border-bottom: 1px solid #f0f0f0;
+            z-index: 10;
+        }
+        .back-btn {
+            background: none; border: none; cursor: pointer;
+            padding: 4px 8px 4px 0;
+            display: flex; align-items: center; z-index: 2;
+        }
+        .back-btn svg { width: 24px; height: 24px; stroke: #1a1a1a; stroke-width: 2; fill: none; }
+        .page-title { font-size: 17px; font-weight: 600; position: absolute; left: 50%; transform: translateX(-50%); }
+
+        .form-body {
+            padding: 20px 20px calc(100px + env(safe-area-inset-bottom, 0px));
+            display: flex; flex-direction: column; gap: 16px;
+        }
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+        .field-label { font-size: 13px; color: #999; font-weight: 400; }
+        .field-input {
+            width: 100%; height: 48px;
+            border: none; border-bottom: 1.5px solid #e0e0e0;
+            padding: 0 4px; font-size: 16px; color: #1a1a1a;
+            background: transparent; outline: none;
+            transition: border-color 0.2s; -webkit-appearance: none;
+            -webkit-user-select: none; user-select: none;
+        }
+        .field-input:focus { border-bottom-color: #1a1a1a; }
+
+        .save-btn {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            margin: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+            height: 54px; background: #1a1a1a; color: #fff;
+            border: none; border-radius: 14px;
+            font-size: 16px; font-weight: 500; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .save-btn svg { width: 18px; height: 18px; stroke: #fff; stroke-width: 2; fill: none; }
+        .save-btn:active { opacity: 0.85; }
+    </style>
+</head>
+<body>
+    <header class="page-header">
+        <button class="back-btn" onclick="KaspiApp.goBack('index.html')">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="page-title">Удостоверение личности</span>
+    </header>
+
+    <div class="form-body">
+        <div class="field-group">
+            <span class="field-label">ФИО</span>
+            <input id="f-fio" type="text" class="field-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="field-group">
+            <span class="field-label">Упрощённое имя</span>
+            <input id="f-shortname" type="text" class="field-input" placeholder="Как показывать в пин-коде" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        </div>
+        <div class="field-group">
+            <span class="field-label">ИИН</span>
+            <input id="f-iin" type="text" class="field-input" inputmode="numeric" maxlength="12">
+        </div>
+        <div class="field-group">
+            <span class="field-label">Дата рождения</span>
+            <input id="f-dob" type="text" class="field-input" placeholder="ДД.ММ.ГГГГ" inputmode="numeric">
+        </div>
+        <div class="field-group">
+            <span class="field-label">Номер документа</span>
+            <input id="f-docnum" type="text" class="field-input" inputmode="numeric">
+        </div>
+        <div class="field-group">
+            <span class="field-label">Дата выдачи</span>
+            <input id="f-issue" type="text" class="field-input" placeholder="ДД.ММ.ГГГГ" inputmode="numeric">
+        </div>
+        <div class="field-group">
+            <span class="field-label">Срок действия</span>
+            <input id="f-expiry" type="text" class="field-input" placeholder="ДД.ММ.ГГГГ" inputmode="numeric">
+        </div>
+    </div>
+
+    <button class="save-btn" onclick="saveData()">
+        Сохранить
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+
+    <script src="common.js"></script>
+    <script>
+        document.querySelectorAll('input[placeholder="ДД.ММ.ГГГГ"]').forEach(function(input) {
+            input.addEventListener('input', function(e) {
+                let val = e.target.value.replace(/\D/g, '');
+                if (val.length > 2) val = val.slice(0,2) + '.' + val.slice(2);
+                if (val.length > 5) val = val.slice(0,5) + '.' + val.slice(5);
+                if (val.length > 10) val = val.slice(0,10);
+                e.target.value = val;
+            });
+        });
+
+        window.addEventListener('load', function() {
+            
+            const data = KaspiApp.getIdData();
+            if (data.fio) document.getElementById('f-fio').value = data.fio;
+            if (data.shortname) document.getElementById('f-shortname').value = data.shortname;
+            if (data.iin) document.getElementById('f-iin').value = data.iin;
+            if (data.dob) document.getElementById('f-dob').value = data.dob;
+            if (data.docnum) document.getElementById('f-docnum').value = data.docnum;
+            if (data.issue) document.getElementById('f-issue').value = data.issue;
+            if (data.expiry) document.getElementById('f-expiry').value = data.expiry;
+        });
+
+        function saveData() {
+            const data = {
+                fio: document.getElementById('f-fio').value.trim(),
+                shortname: document.getElementById('f-shortname').value.trim(),
+                iin: document.getElementById('f-iin').value.trim(),
+                dob: document.getElementById('f-dob').value.trim(),
+                docnum: document.getElementById('f-docnum').value.trim(),
+                issue: document.getElementById('f-issue').value.trim(),
+                expiry: document.getElementById('f-expiry').value.trim(),
+            };
+            if (!data.fio || !data.iin || !data.dob || !data.docnum || !data.issue || !data.expiry) {
+                alert('Заполните все поля');
+                return;
+            }
+            KaspiApp.setIdData(data);
+            KaspiApp.goBack('index.html');
+        }
+    </script>
+</body>
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/id-entry.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:51 GMT -->
+</html>

@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/id-form.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:52 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=461c0f28-a224-431b-95e2-008d78734c0b
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Удостоверение личности</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kaspi.kz">
+    <meta name="application-name" content="Kaspi.kz">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="../laaskakaps.netlify.app/main/img/1024x1024bb.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <script src="common.js"></script>
+    <script>KaspiApp.applyIdDocPreparedState();</script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { touch-action: manipulation; -ms-touch-action: manipulation; }
+        html {
+            height: 100%;
+            background: #ffffff;
+            overflow: hidden;
+        }
+        body {
+            background: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            height: 100dvh;
+            max-height: 100dvh;
+            overflow: hidden;
+        }
+
+        .header,
+        .tabs {
+            flex-shrink: 0;
+        }
+
+        .header {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            padding: 0px 16px;
+            position: relative;
+        }
+        .back-btn { background: none; border: none; cursor: pointer; padding: 4px 8px 4px 0; }
+        .back-btn svg { width: 24px; height: 24px; stroke: #1a1a1a; stroke-width: 2; fill: none; }
+        .header-title {
+        font-size: 16px;
+        font-weight: 690;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;       /* Вот теперь это свойство сработает и запретит 2 строки */
+        }
+
+        .tabs {
+            display: flex;
+            margin: 12px 16px 0;
+            background: #f4f4f4;
+            border-radius: 12px;
+            padding: 3px;
+            position: relative;
+        }
+        .tab-indicator {
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            left: 2px;
+            width: calc(50% - 2px);
+            background: white;
+            border-radius: 10px;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            pointer-events: none;
+        }
+        .tab-indicator.dragging {
+            transition: none;
+        }
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 10px;
+            cursor: pointer;
+            color: #1a1a1a;
+            position: relative;
+            z-index: 1;
+        }
+        .tab.active {
+            color: #1a1a1a;
+            font-weight: 500;
+        }
+
+        .swipe-viewport {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            margin-top: 0;
+            touch-action: pan-y pinch-zoom;
+        }
+        .swipe-track {
+            display: flex;
+            width: 200%;
+            height: 100%;
+            transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: transform;
+        }
+        .swipe-track.dragging { transition: none; }
+
+        .panel {
+            width: 50%;
+            flex-shrink: 0;
+            height: 100%;
+            padding: 6px 16px 12px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #panel-doc:not(.panel-doc--photo) {
+            overflow: hidden;
+        }
+
+        #panel-doc {
+            padding-left: 0;
+            padding-right: 0;
+            padding-top: 8px;
+        }
+
+        #panel-rekv {
+            padding-top: 7px;
+        }
+
+        #panel-doc .upload-row {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .upload-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding-top: 8px;
+            margin-bottom: 20px;
+        }
+        .upload-row.hidden { display: none; }
+
+        html.has-id-photo #upload-photo-row { display: none; }
+        html.has-id-pdf #upload-pdf-row { display: none; }
+        html.has-id-photo #photo-preview { display: block; }
+        html.has-id-photo #panel-doc { overflow: hidden; }
+
+        .btn-upload {
+            background: #2b59c3;
+            color: #ffffff;
+            border: none;
+            border-radius: 14px;
+            padding: 12px 36px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            min-width: 160px;
+        }
+        .btn-upload--pdf {
+            background: #ffffff;
+            color: #2b59c3;
+            border: 1.5px solid #2b59c3;
+        }
+
+        .photo-preview {
+            display: none;
+            width: 100%;
+            margin: 0;
+        }
+        .photo-preview.visible { display: block; }
+        .photo-zoom-viewport {
+            width: 100%;
+            overflow: hidden;
+            touch-action: none;
+            -ms-touch-action: none;
+            background: #fff;
+        }
+        .photo-zoom-inner {
+            width: 100%;
+            transform-origin: 0 0;
+            will-change: transform;
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .photo-zoom-inner img {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            display: block;
+            object-fit: contain;
+            object-position: center center;
+            border-radius: 0;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        #panel-doc.panel-doc--photo .upload-row {
+            margin-bottom: 12px;
+        }
+
+        .rekv-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+        }
+        .rekv-label { font-size: 13px; color: #787878; margin-bottom: 4px; font-family: 'Roboto', sans-serif; }
+        .rekv-value { font-size: 17px; font-weight: 400; color: #1a1a1a; user-select: none; -webkit-user-select: none; font-family: 'Roboto', sans-serif; }
+        .copy-btn { background: none; border: none; cursor: pointer; padding: 6px; }
+        .copy-btn svg { width: 24px; height: 24px; }
+
+        .bottom-buttons {
+            flex-shrink: 0;
+            padding: 18px 16px calc(20px + env(safe-area-inset-bottom, 0px));
+            background: white;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .bottom-buttons.hidden { display: none; }
+
+        .btn-primary {
+            background: #0071c7;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            overflow: hidden;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+            margin-bottom: -18px;
+        }
+        .btn-primary .btn-present-svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+        .btn-outline {
+            background: white;
+            color: #0071c7;
+            border: 2.3px solid rgba(43, 89, 195, 0.3);
+            border-radius: 14px;
+            padding: 14px;
+            font-size: 17px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: -4px;
+        }
+        .btn-outline .btn-share-svg {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            top: calc(10px + env(safe-area-inset-top, 0px));
+            transform: translateX(-50%);
+            background: #5a5a5a;
+            color: #ffffff;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 425;
+            letter-spacing: -0.15px;
+            font-family: 'Roboto', sans-serif;
+            opacity: 0;
+            transition: opacity 0.28s cubic-bezier(0.25, 0.1, 0.25, 1);
+            pointer-events: none;
+            z-index: 9999;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+            width: calc(100% - 32px);
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 10px;
+            white-space: nowrap;
+        }
+        .toast-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+        .toast-text {
+            color: #ffffff;
+            line-height: 1.2;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+
+        input[type="file"] { display: none; }
+
+        /* Панель «Предъявить документ» */
+        .present-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.42s ease, visibility 0.42s ease;
+        }
+        .present-backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .present-sheet {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2001;
+            background: #ffffff;
+            border-radius: 25px 25px 0 0;
+            padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px));
+            transform: translateY(100%);
+            visibility: hidden;
+            pointer-events: none;
+            transition: transform 0.52s cubic-bezier(0.32, 0.72, 0, 1),
+                visibility 0.52s;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            will-change: transform;
+        }
+        .present-sheet.open {
+            transform: translateY(0);
+            visibility: visible;
+            pointer-events: auto;
+        }
+        .present-sheet.dragging {
+            transition: none;
+        }
+
+        .present-sheet-handle {
+            touch-action: none;
+            cursor: grab;
+            flex-shrink: 0;
+        }
+
+        .present-grabber {
+            width: 33px;
+            height: 4px;
+            background: #e5e5e5;
+            border-radius: 3px;
+            margin: 10px auto 6px;
+        }
+
+        .present-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 16px 12px;
+        }
+        .present-header-title {
+            font-size: 21px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .present-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            margin-right: -8px;
+        }
+        .present-close svg {
+            width: 25px;
+            height: 25px;
+            stroke: #1a1a1a;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .present-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 24px 12px;
+            text-align: center;
+        }
+        .present-hint {
+            font-size: 16.5px;
+            font-weight: 450;
+            color: #333333;
+            line-height: 1.35;
+            margin: 0;
+        }
+        .present-hint + .present-qr { margin-top: 0px; }
+        .present-qr + .present-hint { margin-top: -3px; }
+
+        .present-qr {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 170px;
+            height: 170px;
+            margin: 0 auto;
+        }
+        .present-qr canvas {
+            display: block;
+            width: 155px !important;
+            height: 151px !important;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            filter: blur(0.5px);
+        }
+        .present-qr img {
+            display: block;
+            width: 170px;
+            height: 170px;
+            object-fit: contain;
+        }
+
+        .present-qr + .present-hint {
+            margin-bottom: 0;
+        }
+
+        .present-hint + .present-code {
+            margin-top: 0px;
+        }
+
+        .present-code {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 0.0005em;
+            color: #1a1a1a;
+            font-variant-numeric: tabular-nums;
+            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+        }
+
+        .loading-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.show {
+            display: flex;
+        }
+        .loading-spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid #ff0000;
+            border-top-color: #e0e0e0;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-top: -62px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <button type="button" class="back-btn" onclick="KaspiApp.goBack('gov.html')">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <span class="header-title">Удостоверение личности</span>
+</div>
+
+<div class="tabs">
+    <div class="tab-indicator" id="tab-indicator"></div>
+    <div class="tab active" data-tab="doc">Документ</div>
+    <div class="tab" data-tab="rekv">Реквизиты</div>
+</div>
+
+<div class="swipe-viewport" id="swipe-viewport">
+    <div class="swipe-track" id="swipe-track">
+        <div class="panel" id="panel-doc">
+            <div class="upload-row" id="upload-photo-row">
+                <button type="button" class="btn-upload" onclick="document.getElementById('file-photo').click()">Загрузить</button>
+            </div>
+            <div class="upload-row" id="upload-pdf-row">
+                <button type="button" class="btn-upload btn-upload--pdf" onclick="document.getElementById('file-pdf').click()">Загрузить PDF</button>
+            </div>
+            <div class="photo-preview" id="photo-preview">
+                <div class="photo-zoom-viewport" id="photo-zoom-viewport">
+                    <div class="photo-zoom-inner" id="photo-zoom-inner">
+                        <img id="preview-img" src="#" alt="Удостоверение личности">
+                        <script>if (window.__KASPI_ID_PHOTO__) { document.getElementById('preview-img').src = window.__KASPI_ID_PHOTO__; }</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel" id="panel-rekv">
+            <div class="rekv-row"><div><div class="rekv-label">ФИО</div><div class="rekv-value" id="rv-fio">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-fio')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+            <div class="rekv-row"><div><div class="rekv-label">ИИН</div><div class="rekv-value" id="rv-iin">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-iin')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+            <div class="rekv-row"><div><div class="rekv-label">Дата рождения</div><div class="rekv-value" id="rv-dob">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-dob')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+            <div class="rekv-row"><div><div class="rekv-label">Номер документа</div><div class="rekv-value" id="rv-docnum">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-docnum')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+            <div class="rekv-row"><div><div class="rekv-label">Дата выдачи</div><div class="rekv-value" id="rv-issue">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-issue')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+            <div class="rekv-row"><div><div class="rekv-label">Срок действия</div><div class="rekv-value" id="rv-expiry">—</div></div><button type="button" class="copy-btn" onclick="copyText('rv-expiry')"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="none" stroke="#777777" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9V6.2c0-1.12 0-1.68.218-2.108c.192-.377.497-.682.874-.874C10.52 3 11.08 3 12.2 3h5.6c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874C21 4.52 21 5.08 21 6.2v5.6c0 1.12 0 1.68-.218 2.108a2 2 0 0 1-.874.874C19.48 15 18.92 15 17.803 15H15M9 9H6.2c-1.12 0-1.68 0-2.108.218a2 2 0 0 0-.874.874C3 10.52 3 11.08 3 12.2v5.6c0 1.12 0 1.68.218 2.108a2 2 0 0 0 .874.874c.427.218.987.218 2.105.218h5.607c1.117 0 1.676 0 2.104-.218a2 2 0 0 0 .874-.874c.218-.428.218-.987.218-2.105V15M9 9h2.8c1.12 0 1.68 0 2.108.218a2 2 0 0 1 .874.874c.218.427.218.987.218 2.105V15"/></svg></button></div>
+        </div>
+    </div>
+</div>
+
+<div class="bottom-buttons" id="bottom-doc">
+    <button type="button" class="btn-primary" onclick="presentDoc()">
+        <img src="assets/govqr.PNG" class="btn-present-svg" alt="QR">
+        Предъявить документ
+    </button>
+    <button type="button" class="btn-outline" onclick="shareDoc()">
+        <img src="assets/share.png" class="btn-share-svg" alt="Поделиться">
+        Отправить документ
+    </button>
+</div>
+
+<div class="bottom-buttons hidden" id="bottom-rekv">
+    <button type="button" class="btn-outline" onclick="shareRekv()">
+        <img src="assets/share.png" class="btn-share-svg" alt="Поделиться">
+        Отправить реквизиты
+    </button>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <svg class="toast-icon" id="toast-icon" viewBox="0 0 1024 1024" aria-hidden="true"><path fill="#4CAF50" d="M512 64a448 448 0 1 1 0 896a448 448 0 0 1 0-896"/><path fill="#ffffff" d="M456.2 600.4l-99.5-99.6a38.4 38.4 0 1 0-54.4 54.3L429.1 682a38.3 38.3 0 0 0 54.3 0l262.4-262.5a38.4 38.4 0 1 0-54.3-54.3z"/></svg>
+    <span class="toast-text" id="toast-text">Скопировано</span>
+</div>
+
+<div id="present-backdrop" class="present-backdrop" onclick="closePresentSheet()" aria-hidden="true"></div>
+<div id="loading-overlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+</div>
+<div id="present-sheet" class="present-sheet" role="dialog" aria-labelledby="present-sheet-title" aria-hidden="true">
+    <div id="present-sheet-handle" class="present-sheet-handle">
+        <div class="present-grabber" aria-hidden="true"></div>
+        <div class="present-header">
+            <h2 id="present-sheet-title" class="present-header-title">Удостоверение личности</h2>
+            <button type="button" class="present-close" onclick="closePresentSheet()" aria-label="Закрыть">
+                <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+    </div>
+    <div class="present-body">
+        <p class="present-hint">Покажите QR-код сотруднику</p>
+        <div id="present-qr" class="present-qr" role="img" aria-label="QR-код"></div>
+        <p class="present-hint">или скажите код</p>
+        <p id="present-code" class="present-code"></p>
+    </div>
+</div>
+
+<input type="file" id="file-photo" accept="image/*" onchange="uploadPhoto(this)">
+<input type="file" id="file-pdf" accept="application/pdf,.pdf" onchange="uploadPdf(this)">
+
+<script src="assets/qrcode.min.js"></script>
+<script>
+    var activeTab = 'doc';
+    var swipeStartX = 0;
+    var swipeStartY = 0;
+    var swipeTracking = false;
+    var swipeLocked = false;
+    var swipeGestureCommitted = false;
+    var dragOffset = 0;
+    var photoZoomScale = 1;
+    var photoZoomPanX = 0;
+    var photoZoomPanY = 0;
+    var photoMaxScale = 5;
+
+    function getSwipeCommitThreshold(viewport) {
+        return Math.max(viewport.clientWidth * 0.15, 40);
+    }
+
+    function getZoomedEdgeSwipeThreshold(viewport) {
+        return viewport.clientWidth * 0.25;
+    }
+
+    function getPhotoMinPanX(viewport, inner) {
+        var vpW = viewport.clientWidth;
+        var contentW = inner.offsetWidth * photoZoomScale;
+        return contentW <= vpW ? (vpW - contentW) / 2 : vpW - contentW;
+    }
+
+    function isPhotoAtRightEdge(viewport, inner) {
+        return photoZoomPanX <= getPhotoMinPanX(viewport, inner) + 3;
+    }
+
+    function resolveTabSwipe(dx, viewport) {
+        var commit = getSwipeCommitThreshold(viewport);
+
+        if (activeTab === 'doc' && dx <= -commit) {
+            switchTab('rekv');
+            return;
+        }
+        if (activeTab === 'rekv' && dx >= commit) {
+            switchTab('doc');
+            return;
+        }
+        dragOffset = 0;
+        applyTrackPosition(true);
+    }
+
+    function tryZoomedEdgeTabSwipe(panDx, viewport, inner, photoViewport, startedAtRightEdge) {
+        if (activeTab !== 'doc' || photoZoomScale <= 1.02) return;
+        if (!startedAtRightEdge) return;
+        if (!isPhotoAtRightEdge(photoViewport, inner) || panDx >= 0) return;
+
+        var threshold = getZoomedEdgeSwipeThreshold(viewport);
+        if (panDx <= -threshold) {
+            dragOffset = 0;
+            switchTab('rekv');
+        }
+    }
+
+    (function bootstrapIdForm() {
+        // Проверяем общую сессию аутентификации
+        if (!KaspiApp.isAuthSessionValid()) {
+            KaspiApp.goTo('index.html', true, 'back');
+            return;
+        }
+
+        // Устанавливаем флаг для отключения скелетона при возврате на gov.html
+        try {
+            sessionStorage.setItem('kaspi_skip_gov_skeleton', 'true');
+        } catch (err) {
+            /* ignore */
+        }
+        
+        if (!KaspiApp.isIdDataComplete()) {
+            KaspiApp.goTo('id-entry.html', true);
+            return;
+        }
+        initPage();
+        initPhotoZoom();
+        initSwipe();
+        initPresentSheetDrag();
+        applyTrackPosition(true);
+    })();
+
+    function initPage() {
+        var data = KaspiApp.getIdData();
+        if (data.fio) document.getElementById('rv-fio').innerText = data.fio;
+        if (data.iin) document.getElementById('rv-iin').innerText = data.iin;
+        if (data.dob) document.getElementById('rv-dob').innerText = data.dob;
+        if (data.docnum) document.getElementById('rv-docnum').innerText = data.docnum;
+        if (data.issue) document.getElementById('rv-issue').innerText = data.issue;
+        if (data.expiry) document.getElementById('rv-expiry').innerText = data.expiry;
+
+        var savedPhoto = window.__KASPI_ID_PHOTO__ || KaspiApp.getIdPhoto();
+        if (savedPhoto) {
+            showPhoto(savedPhoto);
+        }
+
+        var pdf = KaspiApp.getIdPdf();
+        if (pdf.data) showPdf();
+    }
+
+    function showPhoto(src) {
+        var img = document.getElementById('preview-img');
+        img.src = src;
+        document.documentElement.classList.add('has-id-photo');
+        document.getElementById('photo-preview').classList.add('visible');
+        document.getElementById('upload-photo-row').classList.add('hidden');
+        document.getElementById('panel-doc').classList.add('panel-doc--photo');
+        resetPhotoZoom();
+    }
+
+    function resetPhotoZoom() {
+        photoZoomScale = 1;
+        photoZoomPanX = 0;
+        photoZoomPanY = 0;
+        applyPhotoZoomTransform();
+    }
+
+    function applyPhotoZoomTransform() {
+        var inner = document.getElementById('photo-zoom-inner');
+        if (!inner) return;
+        inner.style.transformOrigin = '0 0';
+        inner.style.transform =
+            'translate(' + photoZoomPanX + 'px, ' + photoZoomPanY + 'px) scale(' + photoZoomScale + ')';
+    }
+
+    function initPhotoZoom() {
+        var viewport = document.getElementById('photo-zoom-viewport');
+        var inner = document.getElementById('photo-zoom-inner');
+        if (!viewport || !inner) return;
+        var pinchStart = null;
+        var isPinching = false;
+        var isPanning = false;
+        var panTouchStartX = 0;
+        var panTouchStartY = 0;
+        var panOriginX = 0;
+        var panOriginY = 0;
+        var panStartedAtRightEdge = false;
+        function touchDistance(touches) {
+            var dx = touches[0].clientX - touches[1].clientX;
+            var dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function focalPoint(touches) {
+            var rect = viewport.getBoundingClientRect();
+            return {
+                x: (touches[0].clientX + touches[1].clientX) / 2 - rect.left,
+                y: (touches[0].clientY + touches[1].clientY) / 2 - rect.top,
+            };
+        }
+
+        function clampPan() {
+            var vpW = viewport.clientWidth;
+            var vpH = viewport.clientHeight;
+            var contentW = inner.offsetWidth * photoZoomScale;
+            var contentH = inner.offsetHeight * photoZoomScale;
+
+            if (contentW <= vpW) {
+                photoZoomPanX = (vpW - contentW) / 2;
+            } else {
+                photoZoomPanX = Math.min(0, Math.max(vpW - contentW, photoZoomPanX));
+            }
+
+            if (contentH <= vpH) {
+                photoZoomPanY = (vpH - contentH) / 2;
+            } else {
+                photoZoomPanY = Math.min(0, Math.max(vpH - contentH, photoZoomPanY));
+            }
+        }
+
+        function scaleAroundPoint(newScale, fx, fy) {
+            var oldScale = photoZoomScale;
+            if (oldScale < 0.001) oldScale = 1;
+            photoZoomPanX = fx - (fx - photoZoomPanX) * (newScale / oldScale);
+            photoZoomPanY = fy - (fy - photoZoomPanY) * (newScale / oldScale);
+            photoZoomScale = newScale;
+        }
+
+        viewport.addEventListener('touchstart', function (e) {
+            if (e.touches.length === 2) {
+                isPinching = true;
+                isPanning = false;
+                swipeLocked = true;
+                var focal = focalPoint(e.touches);
+                pinchStart = {
+                    dist: touchDistance(e.touches),
+                    scale: photoZoomScale,
+                    panX: photoZoomPanX,
+                    panY: photoZoomPanY,
+                    fx: focal.x,
+                    fy: focal.y,
+                };
+                e.preventDefault();
+            } else if (e.touches.length === 1 && photoZoomScale > 1.02) {
+                if (e.touches[0].clientX <= 22) return;
+                isPanning = true;
+                swipeLocked = true;
+                swipeGestureCommitted = false;
+                panTouchStartX = e.touches[0].clientX;
+                panTouchStartY = e.touches[0].clientY;
+                panOriginX = photoZoomPanX;
+                panOriginY = photoZoomPanY;
+                panStartedAtRightEdge = isPhotoAtRightEdge(viewport, inner);
+            }
+        }, { passive: false });
+
+        viewport.addEventListener('touchmove', function (e) {
+            if (isPinching && e.touches.length === 2 && pinchStart) {
+                var dist = touchDistance(e.touches);
+                if (pinchStart.dist > 0) {
+                    var newScale = Math.min(
+                        photoMaxScale,
+                        Math.max(0.3, pinchStart.scale * (dist / pinchStart.dist))
+                    );
+                    photoZoomPanX = pinchStart.panX;
+                    photoZoomPanY = pinchStart.panY;
+                    photoZoomScale = pinchStart.scale;
+                    scaleAroundPoint(newScale, pinchStart.fx, pinchStart.fy);
+                    inner.style.transition = 'none';
+                    if (photoZoomScale < 1) {
+                        applyPhotoZoomTransform();
+                    } else {
+                        applyPhotoZoomTransform();
+                    }
+                }
+                e.preventDefault();
+            } else if (isPanning && e.touches.length === 1 && photoZoomScale > 1.02) {
+                inner.style.transition = 'none';
+                photoZoomPanX = panOriginX + (e.touches[0].clientX - panTouchStartX);
+                photoZoomPanY = panOriginY + (e.touches[0].clientY - panTouchStartY);
+                clampPan();
+                applyPhotoZoomTransform();
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        viewport.addEventListener('touchend', function (e) {
+            if (isPinching && e.touches.length < 2) {
+                isPinching = false;
+                // Если масштаб меньше 1, возвращаем к 1 с плавной анимацией
+                if (photoZoomScale < 1) {
+                    inner.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    photoZoomScale = 1;
+                    photoZoomPanX = 0;
+                    photoZoomPanY = 0;
+                    applyPhotoZoomTransform();
+                    swipeLocked = false;
+                } else {
+                    inner.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                }
+                pinchStart = null;
+            }
+            if (isPanning && e.touches.length === 0) {
+                var swipeViewport = document.getElementById('swipe-viewport');
+                if (swipeViewport) {
+                    var panDx = e.changedTouches[0].clientX - panTouchStartX;
+                    tryZoomedEdgeTabSwipe(panDx, swipeViewport, inner, viewport, panStartedAtRightEdge);
+                }
+                panStartedAtRightEdge = false;
+                isPanning = false;
+            }
+            if (e.touches.length === 0) {
+                if (photoZoomScale <= 1.02) {
+                    resetPhotoZoom();
+                    swipeLocked = false;
+                } else {
+                    inner.style.transition = 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                    clampPan();
+                    applyPhotoZoomTransform();
+                    swipeLocked = true;
+                }
+            }
+        });
+
+        viewport.addEventListener('dblclick', function (e) {
+            var rect = viewport.getBoundingClientRect();
+            var fx = e.clientX - rect.left;
+            var fy = e.clientY - rect.top;
+            if (photoZoomScale > 1.02) {
+                resetPhotoZoom();
+            } else {
+                scaleAroundPoint(2.5, fx, fy);
+                clampPan();
+                applyPhotoZoomTransform();
+            }
+            swipeLocked = photoZoomScale > 1.02;
+        });
+    }
+
+    function showPdf() {
+        document.documentElement.classList.add('has-id-pdf');
+        document.getElementById('upload-pdf-row').classList.add('hidden');
+    }
+
+    function uploadPhoto(input) {
+        var file = input.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            KaspiApp.setIdPhoto(e.target.result);
+            showPhoto(e.target.result);
+            showToast('Фото загружено');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function uploadPdf(input) {
+        var file = input.files[0];
+        if (!file) return;
+        if (file.type && file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+            showToast('Выберите PDF файл');
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            KaspiApp.setIdPdf(file.name, e.target.result);
+            var existingRandom = KaspiApp.getIdPdfRandom();
+            if (!existingRandom) {
+                var random = String(Math.floor(100000000 + Math.random() * 900000000));
+                KaspiApp.setIdPdfRandom(random);
+            }
+            showPdf();
+            showToast('PDF загружен');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function switchTab(tabName, animate) {
+        if (tabName !== activeTab) {
+            resetPhotoZoom();
+            swipeLocked = false;
+        }
+        activeTab = tabName;
+        dragOffset = 0;
+        document.querySelectorAll('.tab').forEach(function (t) {
+            t.classList.toggle('active', t.dataset.tab === tabName);
+        });
+        updateBottomBar(tabName);
+        applyTrackPosition(animate !== false);
+    }
+
+    function updateBottomBar(tabName) {
+        var isDoc = tabName === 'doc';
+        document.getElementById('bottom-doc').classList.toggle('hidden', !isDoc);
+        document.getElementById('bottom-rekv').classList.toggle('hidden', isDoc);
+    }
+
+    function applyTrackPosition(useTransition) {
+        var track = document.getElementById('swipe-track');
+        var viewport = document.getElementById('swipe-viewport');
+        var indicator = document.getElementById('tab-indicator');
+        var panelWidth = viewport.clientWidth;
+        var base = activeTab === 'rekv' ? -panelWidth : 0;
+        if (useTransition === false) {
+            track.classList.add('dragging');
+            if (indicator) indicator.classList.add('dragging');
+        } else {
+            track.classList.remove('dragging');
+            if (indicator) indicator.classList.remove('dragging');
+        }
+        track.style.transform = 'translateX(' + (base + dragOffset) + 'px)';
+        
+        // Sync tab indicator with swipe position
+        if (indicator) {
+            var tabsContainer = document.querySelector('.tabs');
+            var tabsWidth = tabsContainer ? tabsContainer.clientWidth : panelWidth;
+            var tabWidth = tabsWidth / 2; // Each tab is half the tabs container
+            var indicatorOffset = 0;
+            if (activeTab === 'rekv') {
+                indicatorOffset = tabWidth - 2; // Move left slightly less to reduce right gap
+            }
+            // The indicator should move in opposite direction to track swipe
+            // When swiping left (negative dragOffset), indicator should move right
+            var indicatorDrag = -(dragOffset / panelWidth) * tabWidth;
+            indicator.style.transform = 'translateX(' + (indicatorOffset + indicatorDrag) + 'px)';
+        }
+    }
+
+    function initSwipe() {
+        var viewport = document.getElementById('swipe-viewport');
+
+        document.querySelectorAll('.tab').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                switchTab(tab.dataset.tab);
+            });
+        });
+
+        viewport.addEventListener('touchstart', function (e) {
+            if (e.touches.length !== 1) return;
+            if (e.touches[0].clientX <= 22) return;
+            if (swipeLocked || photoZoomScale > 1.02) {
+                swipeTracking = false;
+                return;
+            }
+            swipeStartX = e.touches[0].clientX;
+            swipeStartY = e.touches[0].clientY;
+            swipeTracking = true;
+            swipeGestureCommitted = false;
+            dragOffset = 0;
+        }, { passive: true });
+
+        viewport.addEventListener('touchmove', function (e) {
+            if (!swipeTracking || swipeLocked) return;
+            var dx = e.touches[0].clientX - swipeStartX;
+            var dy = e.touches[0].clientY - swipeStartY;
+            if (!swipeGestureCommitted) {
+                if (Math.abs(dx) < 14) return;
+                if (Math.abs(dx) < Math.abs(dy) * 1.4) {
+                    swipeTracking = false;
+                    dragOffset = 0;
+                    return;
+                }
+                swipeGestureCommitted = true;
+                applyTrackPosition(false);
+            }
+            var panelWidth = viewport.clientWidth;
+            if (activeTab === 'doc') {
+                dragOffset = Math.min(0, Math.max(-panelWidth, dx));
+            } else {
+                dragOffset = Math.max(0, Math.min(panelWidth, dx));
+            }
+            applyTrackPosition(false);
+            e.preventDefault();
+        }, { passive: false });
+
+        viewport.addEventListener('touchend', function (e) {
+            if (!swipeTracking) return;
+            swipeTracking = false;
+            if (!swipeGestureCommitted) {
+                dragOffset = 0;
+                return;
+            }
+            var dx = e.changedTouches[0].clientX - swipeStartX;
+            resolveTabSwipe(dx, viewport);
+        }, { passive: true });
+
+        window.addEventListener('resize', function () {
+            applyTrackPosition(true);
+        });
+    }
+
+    function dataUrlToBlob(dataUrl) {
+        var parts = dataUrl.split(',');
+        var mime = parts[0].match(/:(.*?);/)[1];
+        var binary = atob(parts[1]);
+        var len = binary.length;
+        var arr = new Uint8Array(len);
+        for (var i = 0; i < len; i++) arr[i] = binary.charCodeAt(i);
+        return new Blob([arr], { type: mime });
+    }
+
+    function getPdfFile() {
+        var pdf = KaspiApp.getIdPdf();
+        if (!pdf.data) return null;
+        var blob = dataUrlToBlob(pdf.data);
+        
+        var data = KaspiApp.getIdData();
+        var iin = data.iin || '';
+        
+        var now = new Date();
+        var year = now.getFullYear();
+        var month = String(now.getMonth() + 1).padStart(2, '0');
+        var day = String(now.getDate()).padStart(2, '0');
+        var dateStr = year + month + day;
+        
+        var random = KaspiApp.getIdPdfRandom() || '000000000';
+        
+        var fileName = iin + '-' + dateStr + random + '.pdf';
+        
+        return new File([blob], fileName, { type: 'application/pdf' });
+    }
+
+    function shareDoc() {
+        var file = getPdfFile();
+        if (!file) {
+            showToast('Сначала загрузите PDF');
+            return;
+        }
+        if (!navigator.share) {
+            showToast('Поделиться недоступно в этом браузере');
+            return;
+        }
+        var payload = { files: [file] };
+        if (navigator.canShare && !navigator.canShare(payload)) {
+            showToast('Не удалось открыть меню «Поделиться»');
+            return;
+        }
+        navigator.share(payload).catch(function (err) {
+            if (err && err.name !== 'AbortError') {
+                showToast('Не удалось поделиться');
+            }
+        });
+    }
+
+    function copyText(id) {
+        var text = document.getElementById(id).innerText;
+        if (text && text !== '—') {
+            KaspiApp.copyToClipboard(text).then(function (ok) {
+                if (ok) showToast('Скопировано');
+            });
+        }
+    }
+
+    function randomSixDigitCode() {
+        return String(Math.floor(100000 + Math.random() * 900000));
+    }
+
+    function buildPresentPayload(code) {
+        return 'https://kaspi.kz';
+    }
+
+    function getPresentQrOptions() {
+        return {
+            errorCorrectionLevel: 'Q',
+            version: 5,
+            width: 160,
+            margin: 4,
+            color: { dark: '#000000', light: '#ffffff' }
+        };
+    }
+
+    function renderPresentQr(payload) {
+        var container = document.getElementById('present-qr');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (typeof QRCode === 'undefined') {
+            container.textContent = 'QR-код недоступен';
+            return;
+        }
+
+        var opts = getPresentQrOptions();
+        try {
+            QRCode.create(payload, { errorCorrectionLevel: 'H' });
+        } catch (createErr) {
+            container.textContent = 'QR-код недоступен';
+            return;
+        }
+
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('data-ec-level', 'H');
+        canvas.setAttribute('aria-label', 'QR-код, уровень коррекции H');
+
+        QRCode.toCanvas(canvas, payload, opts, function (err) {
+            if (!err) {
+                container.appendChild(canvas);
+                return;
+            }
+            QRCode.toDataURL(payload, opts, function (err2, url) {
+                if (err2 || !url) {
+                    container.textContent = 'QR-код недоступен';
+                    return;
+                }
+                var img = document.createElement('img');
+                img.src = url;
+                img.alt = 'QR-код';
+                img.width = 176;
+                img.height = 176;
+                img.setAttribute('data-ec-level', 'H');
+                container.appendChild(img);
+            });
+        });
+    }
+
+    function resetPresentSheetDragStyles() {
+        var sheet = document.getElementById('present-sheet');
+        var backdrop = document.getElementById('present-backdrop');
+        if (sheet) sheet.style.transform = '';
+        if (backdrop) backdrop.style.opacity = '';
+    }
+
+    function initPresentSheetDrag() {
+        var sheet = document.getElementById('present-sheet');
+        var backdrop = document.getElementById('present-backdrop');
+        var handle = document.getElementById('present-sheet-handle');
+        if (!sheet || !backdrop || !handle) return;
+
+        var dragStartY = 0;
+        var dragOffsetY = 0;
+        var sheetDragActive = false;
+
+        handle.addEventListener('touchstart', function (e) {
+            if (e.target.closest('.present-close')) return;
+            if (!sheet.classList.contains('open') || e.touches.length !== 1) return;
+            sheetDragActive = true;
+            dragStartY = e.touches[0].clientY;
+            dragOffsetY = 0;
+            sheet.classList.add('dragging');
+        }, { passive: true });
+
+        handle.addEventListener('touchmove', function (e) {
+            if (!sheetDragActive || e.touches.length !== 1) return;
+            var dy = e.touches[0].clientY - dragStartY;
+            if (dy < 0) dy = 0;
+            dragOffsetY = dy;
+            sheet.style.transform = 'translateY(' + dy + 'px)';
+            var fade = Math.max(0, 1 - dy / 280);
+            backdrop.style.opacity = String(fade);
+            e.preventDefault();
+        }, { passive: false });
+
+        function endSheetDrag() {
+            if (!sheetDragActive) return;
+            sheetDragActive = false;
+            sheet.classList.remove('dragging');
+            var threshold = Math.min(100, sheet.offsetHeight * 0.2);
+            if (dragOffsetY > threshold) {
+                resetPresentSheetDragStyles();
+                closePresentSheet();
+            } else {
+                resetPresentSheetDragStyles();
+            }
+            dragOffsetY = 0;
+        }
+
+        handle.addEventListener('touchend', endSheetDrag, { passive: true });
+        handle.addEventListener('touchcancel', endSheetDrag, { passive: true });
+    }
+
+    function openPresentSheet() {
+        var code = randomSixDigitCode();
+        var backdrop = document.getElementById('present-backdrop');
+        var sheet = document.getElementById('present-sheet');
+        var bottomDoc = document.getElementById('bottom-doc');
+
+        resetPresentSheetDragStyles();
+        document.getElementById('present-code').textContent = code;
+        document.getElementById('present-qr').innerHTML = '';
+        if (bottomDoc) bottomDoc.classList.add('hidden');
+
+        backdrop.classList.add('open');
+        backdrop.setAttribute('aria-hidden', 'false');
+        sheet.classList.add('open');
+        sheet.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+
+        renderPresentQr(buildPresentPayload(code));
+    }
+
+    function closePresentSheet() {
+        var backdrop = document.getElementById('present-backdrop');
+        var sheet = document.getElementById('present-sheet');
+        var bottomDoc = document.getElementById('bottom-doc');
+        var loadingOverlay = document.getElementById('loading-overlay');
+
+        resetPresentSheetDragStyles();
+        backdrop.classList.remove('open');
+        backdrop.setAttribute('aria-hidden', 'true');
+        sheet.classList.remove('open');
+        sheet.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (loadingOverlay) loadingOverlay.classList.remove('show');
+        if (bottomDoc && activeTab === 'doc') bottomDoc.classList.remove('hidden');
+
+        sheet.addEventListener('transitionend', function onEnd(e) {
+            if (e.propertyName !== 'transform' || sheet.classList.contains('open')) return;
+            document.getElementById('present-qr').innerHTML = '';
+            document.getElementById('present-code').textContent = '';
+            sheet.removeEventListener('transitionend', onEnd);
+        });
+    }
+
+    function presentDoc() {
+        var loadingOverlay = document.getElementById('loading-overlay');
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        setTimeout(function() {
+            if (loadingOverlay) {
+                loadingOverlay.classList.remove('show');
+            }
+            openPresentSheet();
+        }, 300);
+    }
+
+    function shareRekv() {
+        var data = KaspiApp.getIdData();
+        var text = [
+            'ФИО: ' + (data.fio || ''),
+            'ИИН: ' + (data.iin || ''),
+            'Дата рождения: ' + (data.dob || ''),
+            'Номер документа: ' + (data.docnum || ''),
+            'Дата выдачи: ' + (data.issue || ''),
+            'Срок действия: ' + (data.expiry || '')
+        ].join('\n');
+        if (navigator.share) {
+            navigator.share({ title: 'Реквизиты', text: text }).catch(function () {});
+        } else {
+            KaspiApp.copyToClipboard(text).then(function (ok) {
+                if (ok) showToast('Реквизиты скопированы');
+            });
+        }
+    }
+
+    function showToast(msg) {
+        var toast = document.getElementById('toast');
+        var textEl = document.getElementById('toast-text');
+        var iconEl = document.getElementById('toast-icon');
+        if (!toast) return;
+        var isCopy = /скопир/i.test(msg);
+        if (textEl) {
+            textEl.textContent = msg;
+        }
+        if (iconEl) {
+            iconEl.style.display = isCopy ? 'block' : 'none';
+        }
+        toast.classList.add('show');
+        setTimeout(function () { toast.classList.remove('show'); }, 2000);
+    }
+</script>
+</body>
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/id-form.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:53 GMT -->
+</html>

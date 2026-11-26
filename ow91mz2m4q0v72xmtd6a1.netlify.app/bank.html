@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/bank.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:50 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+<!-- This site is hosted on Netlify. Anyone can build and deploy a site
+     like this one for free: https://netlify.new/?utm_campaign=loops&utm_source=ai-legible&utm_medium=owned&utm_content=comment&utm_id=461c0f28-a224-431b-95e2-008d78734c0b
+     Netlify hosting facts for this site: static/SSR served via Netlify Edge. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Demo Banking App</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Demo App">
+    <meta name="application-name" content="Demo App">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="assets/demo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Open+Sans:wght@400;500;600;700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        html, body { touch-action: manipulation; -ms-touch-action: manipulation; height: 100%; height: 100dvh; margin: 0; padding: 0; overflow: hidden; }
+        html { background: #dedede; }
+        body { background: #dedede; color: #000000; display: flex; flex-direction: column; min-height: 100%; min-height: 100dvh; }
+
+        .bank-content {
+            animation: fadeInRight 0.3s ease-out;
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .bank-content.fade-out {
+            animation: fadeOutRight 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeOutRight {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+        }
+
+        .bank-header { padding: 12px 16px 0; background: #ffffff; position: fixed; top: -10px; left: 0; right: 0; z-index: 99999; }
+        .bank-topbar { display: flex; align-items: center; height: 44px; position: relative; }
+        .bank-back { width: 40px; height: 40px; border: none; background: none; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; margin-left: -8px; }
+        .bank-back svg { width: 24px; height: 24px; stroke: #1a1a1a; stroke-width: 2; fill: none; }
+        .bank-page-title { position: absolute; left: 50%; transform: translateX(-50%); font-size: 17px; font-weight: 750; }
+
+        .bank-content { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding-top: 50px; padding-bottom: calc(42px + env(safe-area-inset-bottom, 0px)); -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; background: #f5f5f5; }
+
+        .bank-section { padding: 0 16px; margin-bottom: 12px; }
+        .bank-section:first-child { margin-top: 7.5px; }
+
+        .bank-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18.5px 16px;
+            background: #ffffff;
+            border-radius: 15px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .bank-card:active { background: #fafafa; }
+
+        .bank-card--clickable {
+            cursor: pointer;
+        }
+        
+        .bank-card--gold {
+            padding: 16px 16px;
+        }
+        
+        
+        .bank-card-icon { width: 40px; height: 26px; flex-shrink: 0; border-radius: 8px; background-size: cover; background-position: center; background-repeat: no-repeat; }
+        .bank-card-icon.bank-card--gold { background-image: url("../static.cdn-kaspi.kz/kkz/pcm/start/banners/Gold_salary.png"); border-radius: 4px; margin-bottom: -4px;}
+        .bank-card--deposit { background-image: url("../static.cdn-kaspi.kz/ds/core-badges/kaspi-deposit-card-500-x3.png"); height: 35px; border-radius: 6px; }
+        .bank-card--bonus-icon { width: 40px; height: 31px; background: #58a000; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 4px; gap: 0px; }
+        .bank-card--deposit-icon { width: 40px; height: 35px; background: #ffffff; display: flex; align-items: center; justify-content: center; border-radius: 6px; margin-bottom: -5px;}
+        .bank-card--deposit-icon img { width: 40px; height: 35px; object-fit: contain; border-radius: 6px; }
+        .bank-card--bonus-icon .bonus-line { width: 10px; height: 1.5px; background: #ffffff; border-radius: 1px; margin-bottom: -3.5px; margin-right: 1px; }
+        .bank-card--bonus-icon span { font-size: 22px; font-weight: 350; color: #ffffff; margin-bottom: -7px; }
+        .bank-card--plus { background: #f3f7fbf7; display: flex; align-items: center; justify-content: center; width: 36px; height: 28px; border-radius: 3px; margin-right: 0px; }
+        .bank-card--plus svg { width: 26px; height: 24px; stroke: #666666; fill: none; stroke-width: 2; }
+        
+        .bank-card-text { flex: 1; min-width: 0; }
+        .bank-card-title { font-size: 17px; font-weight: 400; line-height: 1.25; margin-top: 0px; }
+        .bank-card-title--link { color: #2173d1; font-weight: 500; font-size: 15px; }
+        .bank-card-sub { font-size: 13px; color: #7f7f7f; margin-top: 2px; line-height: 1.35; font-weight: 400; letter-spacing: -0.5px; }
+        .bank-card-balance { font-size: 17px; font-weight: 420; color: #000000; margin-top: -20px; }
+        .bank-card-balance--bonus { margin-top: 0; }
+        .bank-card-balance--deposit { margin-top: -20px; }
+        .bonus-letter { position: relative; display: inline-block; font-size: 14px; font-weight: 550;}
+        .bonus-letter::after { content: ''; position: absolute; top: 1.5px; left: 1px; width: 6px; height: 1.5px; background: #000000; border-radius: 1px; }
+        .bank-card-chevron { width: 18px; height: 18px; stroke: #ddeeef; fill: none; stroke-width: 2; flex-shrink: 0; }
+
+        .bottom-nav {
+            position: fixed !important;
+            bottom: -5px !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100%;
+            min-height: 30px;
+            padding: 3px 0 calc(3px + env(safe-area-inset-bottom, 0px));
+            background-color: #ffffff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            z-index: 99999;
+            box-shadow: none;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+            top: auto !important;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            min-height: 40px;
+            text-decoration: none;
+            color: #868686;
+            font-size: 11px;
+            font-weight: 400;
+            gap: 3px;
+            line-height: 1.1;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .nav-item.active {
+            color: #f14635;
+            font-weight: 500;
+            background-color: rgba(241, 70, 53, 0.1);
+            border-radius: 6px;
+        }
+
+        .nav-item--inert {
+            pointer-events: none;
+            cursor: default;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        .nav-item.active .nav-icon {
+            stroke-width: 2.15;
+        }
+
+        .nav-icon {
+            width: 25px;
+            height: 25px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.55;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-icon--home {
+            width: 26px;
+            height: 26px;
+        }
+
+        .nav-icon .nav-fill {
+            fill: currentColor;
+            stroke: none;
+        }
+
+        .nav-mask-icon {
+            width: 25px;
+            height: 25px;
+            display: block;
+            background-color: currentColor;
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+        }
+
+        .nav-mask-icon--qr {
+            width: 25px;
+            height: 25px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/scan-qr-500.svg");
+        }
+
+        .nav-mask-icon--chat {
+            width: 24px;
+            height: 24px;
+            mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+            -webkit-mask-image: url("../static.cdn-kaspi.kz/ds/core-icons/chat-500.svg");
+        }
+
+        .nav-icon-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .nav-badge {
+            position: absolute;
+            top: -5px;
+            right: -6px;
+            min-width: 19px;
+            height: 14px;
+            padding: 0 2px;
+            background-color: #f14635;
+            color: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+            font-size: 11.2px;
+            font-weight: 500;
+            line-height: 14px;
+            text-align: center;
+            border-radius: 999px;
+            letter-spacing: -0.5px;
+            box-sizing: border-box;
+            pointer-events: none;
+            box-shadow:
+                0 0 0 0.2px #b8b7b7,
+                0 0 0 0.9px #ffffff,
+                0 0 0 1.1px #cac9c9;
+        }
+
+        /* Скелетон анимация */
+        #bank-skeleton {
+            position: fixed; top: 0; left: 0; right: 0; bottom: calc(50px + env(safe-area-inset-bottom, 0px));
+            background: #f5f5f5; z-index: 99998;
+            padding: 0; box-sizing: border-box;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+        .sk-anim {
+            background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 50%, #f2f2f2 75%);
+            background-size: 200% 100%;
+            animation: sk-shimmer 1.5s infinite linear;
+        }
+        @keyframes sk-shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+
+        .sk-bank-section { margin-bottom: 1px; margin-top: 8px; padding: 0 16px; }
+        .sk-bank-section:first-child { margin-top: 58px; }
+
+        .sk-bank-card {
+            display: flex; align-items: center; gap: 14px; padding: 13px 16px;
+            border-radius: 12px; margin-bottom: 0;
+            background: #ffffff;
+        }
+        .sk-bank-icon { width: 44px; height: 33px; border-radius: 8px; flex-shrink: 0; }
+        .sk-bank-lines { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+        .sk-bank-line-1 { width: 55%; height: 16px; border-radius: 4px; }
+        .sk-bank-balance { width: 40px; height: 18px; border-radius: 4px; flex-shrink: 0; }
+
+
+        .skeleton-fade-out { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.25s ease, visibility 0.25s ease; }
+
+        /* Стили товаров */
+        .goods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            padding: 0 1px;
+            margin-bottom: 12px;
+        }
+
+        .goods-card {
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+            height: 100%;
+            border: none;
+            box-shadow: none;
+        }
+
+        .goods-media {
+            position: relative;
+            padding: 0 0 0 0;
+        }
+
+        .wishlist-btn {
+            position: absolute;
+            top: 5px;
+            right: 2px;
+            background: none;
+            border: none;
+            z-index: 10;
+            padding: 4px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .wishlist-icon {
+            width: 20px;
+            height: 20px;
+            fill: #ffffff !important;
+            stroke: #000000 !important;
+            stroke-width: 2.8px !important;
+            stroke-linejoin: round !important;
+            overflow: visible !important;
+            filter: drop-shadow(1.5px 0px 0px #ffffff)
+                    drop-shadow(-1.5px 0px 0px #ffffff)
+                    drop-shadow(0px 1.5px 0px #ffffff)
+                    drop-shadow(0px -1.5px 0px #ffffff);
+        }
+
+        .goods-img-frame {
+            position: relative;
+            width: 100%;
+            height: 205px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 0 !important;
+            box-sizing: border-box;
+        }
+
+        .goods-img {
+            max-width: 100% !important;
+            max-height: 100% !important;
+            object-fit: cover !important;
+        }
+
+        .goods-badges-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            z-index: 5;
+        }
+
+        .pcs-ad-grid__item-bonus {
+            background-color: #58a000;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 1px 7px 1px 6px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 0;
+            line-height: 1.2;
+        }
+
+        .pcs-ad-grid__item-badge {
+            display: none;
+        }
+
+        .pcs-shop__badge-loan-display {
+            color: #000000;
+            font-size: 12px;
+            font-weight: 648;
+            padding: 4px 10px 4px 8px;
+            display: block;
+            letter-spacing: -0.1px;
+            line-height: 1.2;
+        }
+
+        .goods-info-block {
+            padding: 3px 2px 14px 2px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .goods-price-section {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .goods-price {
+            font-family: 'Roboto', sans-serif;
+            font-size: 18px;
+            font-weight: 1000;
+            color: #000000;
+            line-height: 1.15;
+            letter-spacing: -0.3px;
+        }
+
+        .goods-bonus-subtext {
+            font-family: 'Roboto', sans-serif;
+            background-color: #e5f7d0;
+            color: #1f1f1f;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: -0.2px;
+            padding: 1px 10px 1px 8px;
+            max-width: 100%;
+            border-radius: 7px;
+            white-space: nowrap;
+        }
+
+        .goods-bonus-price {
+            color: #58a000;
+            font-size: 13px;
+            letter-spacing: -0.1px;
+            font-weight: 700;
+            margin-left: -3px;
+        }
+
+        .goods-title {
+            font-size: 13px;
+            font-weight: 400;
+            color: #1a1a1a;
+            line-height: 1.3;
+            margin-top: 4px;
+        }
+
+        .goods-rating-row {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            margin-top: 5px;
+        }
+
+        .star-icon {
+            width: 13px;
+            height: 13px;
+            fill: #f14635;
+            flex-shrink: 0;
+        }
+
+        .rating-val {
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .reviews-count {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8f8f8f;
+        }
+
+        .goods-instalment-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+        }
+
+        .goods-instalment-badge {
+            font-family: 'Roboto', sans-serif;
+            background-color: #ffd300;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-size: 14px;
+            font-weight: 520;
+            color: #000000;
+            line-height: 1.2;
+            margin-top: 4px;
+        }
+
+        .goods-instalment-term {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8f8f8f;
+            margin-left: -3px;
+        }
+
+        .goods-section {
+            background-color: #ffffff;
+            padding: 20px 0px 40px;
+            margin-top: 13px;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .goods-section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            padding: 0 16px;
+        }
+
+        .goods-ad-label {
+            font-family: 'Roboto', sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            color: #8f8f8f;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="bank-skeleton">
+    <div class="sk-bank-section">
+        <div class="sk-anim sk-bank-card">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-bottom: 0;">
+        <div class="sk-anim sk-bank-card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-top: -1px;">
+        <div class="sk-anim sk-bank-card" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section">
+        <div class="sk-anim sk-bank-card">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-bottom: 0;">
+        <div class="sk-anim sk-bank-card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-top: -1px;">
+        <div class="sk-anim sk-bank-card" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-bottom: 0;">
+        <div class="sk-anim sk-bank-card" style="border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-top: -1px; margin-bottom: 0;">
+        <div class="sk-anim sk-bank-card" style="border-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+    <div class="sk-bank-section" style="margin-top: -1px;">
+        <div class="sk-anim sk-bank-card" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+            <div class="sk-anim sk-bank-icon"></div>
+            <div class="sk-bank-lines">
+                <div class="sk-anim sk-bank-line-1"></div>
+            </div>
+            <div class="sk-anim sk-bank-balance"></div>
+        </div>
+    </div>
+
+</div>
+
+<header class="bank-header">
+    <div class="bank-topbar">
+        <button type="button" class="bank-back" onclick="handleBankBack()" aria-label="Назад">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <h1 class="bank-page-title">Мой Банк</h1>
+    </div>
+</header>
+
+<div class="bank-content">
+    <div class="bank-section">
+        <div class="bank-card bank-card--clickable" onclick="KaspiApp.goTo('gold.html', false, 'forward')">
+            <div class="bank-card-icon bank-card--gold"></div>
+            <div class="bank-card-text">
+                <div class="bank-card-title">Kaspi Gold</div>
+                <div class="bank-card-sub" id="bank-card-last-digits">• • • •</div>
+            </div>
+            <div class="bank-card-balance">8 410 ₸</div>
+        </div>
+    </div>
+
+    <div class="bank-section">
+        <div class="bank-card">
+            <div class="bank-card-icon bank-card--plus">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="bank-card-text">
+                <div class="bank-card-title bank-card-title--link">Открыть Kaspi Red+ 0-0-4</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bank-section" style="margin-bottom: 0; margin-top: 4px;">
+        <div class="bank-card" style="padding: 14px 16px; border-bottom-left-radius: 0; border-bottom-right-radius: 0;">
+            <div class="bank-card--deposit-icon">
+                <img src="../static.cdn-kaspi.kz/ds/core-badges/kaspi-deposit-card-500-x3.png" alt="Депозит">
+            </div>
+            <div class="bank-card-text">
+                <div class="bank-card-title">Депозит KZT</div>
+                <div class="bank-card-sub">до 10.05.2027</div>
+            </div>
+            <div class="bank-card-balance bank-card-balance--deposit">1 000 ₸</div>
+        </div>
+    </div>
+
+    <div class="bank-section" style="margin-top: -1px;">
+        <div class="bank-card" style="border-top-left-radius: 0; border-top-right-radius: 0;">
+            <div class="bank-card-icon bank-card--plus">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="bank-card-text">
+                <div class="bank-card-title bank-card-title--link">Открыть депозит</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bank-section">
+        <div class="bank-card">
+            <div class="bank-card-icon bank-card--plus">
+                <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="bank-card-text">
+                <div class="bank-card-title bank-card-title--link">Оформить Кредит или Рассрочку</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bank-section">
+        <div class="bank-card">
+            <div class="bank-card--bonus-icon">
+                <div class="bonus-line"></div>
+                <span>Б</span>
+            </div>
+            <div class="bank-card-text">
+                <div class="bank-card-title">Kaspi Бонус</div>
+            </div>
+            <div class="bank-card-balance bank-card-balance--bonus">12 903,78 <span class="bonus-letter">Б</span></div>
+        </div>
+    </div>
+</div>
+
+<nav class="bottom-nav">
+    <a class='nav-item active' href='index-2.html'>
+        <svg class="nav-icon nav-icon--home" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4.5 10.2 12 4.2l7.5 6V19a1.2 1.2 0 0 1-1.2 1.2H14.2v-5.4H9.8V20.2H5.7A1.2 1.2 0 0 1 4.5 19V10.2z"/>
+        </svg>
+        <span>Главная</span>
+    </a>
+    <span class="nav-item nav-item--inert" role="presentation">
+        <span class="nav-mask-icon nav-mask-icon--qr" aria-hidden="true"></span>
+        <span>Kaspi QR</span>
+    </span>
+    <span class="nav-item nav-item--inert" role="presentation">
+        <span class="nav-icon-wrap">
+            <span class="nav-mask-icon nav-mask-icon--chat" aria-hidden="true"></span>
+            <span class="nav-badge" aria-label="16 непрочитанных сообщений">16</span>
+        </span>
+        <span>Сообщения</span>
+    </span>
+    <span class="nav-item nav-item--inert" role="presentation">
+        <svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <line x1="4" y1="7" x2="20" y2="7"/>
+            <line x1="4" y1="12" x2="20" y2="12"/>
+            <line x1="4" y1="17" x2="20" y2="17"/>
+        </svg>
+        <span>Сервисы</span>
+    </span>
+</nav>
+
+<script src="common.js"></script>
+<script>
+    function handleBankBack() {
+        var content = document.querySelector('.bank-content');
+        if (content) {
+            content.classList.add('fade-out');
+            setTimeout(function() {
+                KaspiApp.goBack('index.html');
+            }, 300);
+        } else {
+            KaspiApp.goBack('index.html');
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+        // Проверяем общую сессию аутентификации
+        if (!KaspiApp.isAuthSessionValid()) {
+            KaspiApp.goTo("index.html", true, "back");
+            return;
+        }
+        
+        // Предзагружаем index.html для быстрого возврата назад
+        var preloadLink = document.createElement('link');
+        preloadLink.rel = 'prefetch';
+        preloadLink.href = 'index.html';
+        document.head.appendChild(preloadLink);
+        
+        var skeleton = document.getElementById('bank-skeleton');
+        if (!skeleton) return;
+
+        // Всегда показываем скелетон для плавной загрузки
+        skeleton.classList.remove('skeleton-fade-out');
+        document.body.classList.add('skeleton-active');
+
+        // Загружаем последние 4 цифры карты из секретного меню
+        loadBankCardLastDigits();
+
+        // Используем умный скелетон с авто-таймером и предзагрузкой
+        KaspiApp.initSmartSkeleton('bank-skeleton', function(markReady) {
+            // Предзагружаем контент в фоне
+            var imagesToPreload = document.querySelectorAll('.bank-card-icon, .bank-card--deposit-icon img');
+            var imagesLoaded = 0;
+            var totalImages = imagesToPreload.length;
+
+            if (totalImages === 0) {
+                markReady();
+                return;
+            }
+
+            imagesToPreload.forEach(function(img) {
+                if (img.complete) {
+                    imagesLoaded++;
+                    if (imagesLoaded === totalImages) {
+                        markReady();
+                    }
+                } else {
+                    img.onload = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                    img.onerror = function() {
+                        imagesLoaded++;
+                        if (imagesLoaded === totalImages) {
+                            markReady();
+                        }
+                    };
+                }
+            });
+
+            // Таймаут на случай если изображения не загрузятся
+            setTimeout(function() {
+                markReady();
+            }, 500);
+        });
+    });
+
+    function loadBankCardLastDigits() {
+        try {
+            var data = JSON.parse(localStorage.getItem('kaspi_secret_card_data') || '{}');
+            var cardNumber = data.cardNumber || '';
+            var lastDigits = '';
+
+            if (cardNumber) {
+                // Убираем пробелы и берем последние 4 цифры
+                var cleanNumber = cardNumber.replace(/\s/g, '');
+                if (cleanNumber.length >= 4) {
+                    lastDigits = cleanNumber.slice(-4);
+                }
+            }
+
+            var lastDigitsElement = document.getElementById('bank-card-last-digits');
+            if (lastDigitsElement) {
+                lastDigitsElement.textContent = lastDigits ? '• ' + lastDigits : '• • • •';
+            }
+
+            // Load balances from localStorage
+            var goldBalance = localStorage.getItem('kaspi_gold_balance') || '8 410 ₸';
+            var depositBalance = localStorage.getItem('kaspi_deposit_balance') || '1 000 ₸';
+            var bonusBalance = localStorage.getItem('kaspi_bonus_balance') || '170,51 ₸';
+
+            var goldBalanceElement = document.querySelector('.bank-card--clickable .bank-card-balance');
+            if (goldBalanceElement) {
+                goldBalanceElement.textContent = goldBalance;
+            }
+
+            var depositBalanceElement = document.querySelector('.bank-card-balance--deposit');
+            if (depositBalanceElement) {
+                depositBalanceElement.textContent = depositBalance;
+            }
+
+            var bonusBalanceElement = document.querySelector('.bank-card-balance--bonus');
+            if (bonusBalanceElement) {
+                // Remove the old balance and add new one with bonus letter
+                bonusBalanceElement.innerHTML = bonusBalance + ' <span class="bonus-letter">Б</span>';
+            }
+        } catch (e) {
+            console.error('Failed to load bank card last digits:', e);
+        }
+    }
+</script>
+</body>
+
+<!-- Mirrored from https://ow91mz2m4q0v72xmtd6a1.netlify.app/bank.html by HTTrack Website Copier/3.x [XR&CO], Thu, 26 Nov 2026 09:43:51 GMT -->
+</html>
